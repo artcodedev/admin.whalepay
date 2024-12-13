@@ -5,7 +5,8 @@ export const auth_wrapp = {
     padding: '30px',
     boxShadow: '0 0 40px #999',
     borderRadius: '10px',
-    margin: '5px'
+    margin: '5px',
+    minWidth: '300px'
 }
 
 export const auth_title = {

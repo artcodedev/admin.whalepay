@@ -19,9 +19,11 @@ export default function Home() {
 
       <Container style={{ position: 'absolute', minHeight: '100%', minWidth: '100%', display: "flex", justifyContent: 'center', alignItems: 'center' }}>
 
-        <div style={{textAlign: 'center'}}>
+        <div style={{ textAlign: 'center' }}>
 
-          <Typography variant="h4" component="h2" style={{margin: '20px'}}>
+          <Typography variant="h4" component="h2" style={{ margin: '20px' }}>
+
+
             Welcome to admin WhalePay
           </Typography>
 

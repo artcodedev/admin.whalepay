@@ -32,7 +32,7 @@ export default function Auth() {
   const [pass, setPass] = React.useState<string>('');
   const [errorLogin, setErrorLogin] = React.useState<boolean>(false);
   const [errorPass, setErrorPass] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [token, setToken] = useCookies(['token']);
 
   React.useEffect(() => {
@@ -62,7 +62,7 @@ export default function Auth() {
 
     <>
 
-      {loading ? <Loading /> : <Container sx={styles.container}>
+      {loading ? <Loading /> : <Container maxWidth='lg' sx={styles.container}>
 
         <Box sx={auth_style.auth_wrapp}>
 
