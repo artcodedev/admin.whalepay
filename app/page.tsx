@@ -21,9 +21,7 @@ export default function Home() {
 
         <div style={{ textAlign: 'center' }}>
 
-          <Typography variant="h4" component="h2" style={{ margin: '20px' }}>
-
-
+          <Typography variant="h4" component="h2" style={{ margin: '20px' }} color='#575757'>
             Welcome to admin WhalePay
           </Typography>
 

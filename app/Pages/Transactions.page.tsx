@@ -24,21 +24,21 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-    { id: 'status', label: 'Статус', minWidth:  50 },
+    { id: 'status', label: 'Статус', minWidth:  30 },
 
-    { id: 'sum', label: 'Сумма', minWidth: 50 },
+    { id: 'sum', label: 'Сумма', minWidth: 30 },
 
     {
         id: 'domein',
         label: 'Домен',
-        minWidth: 50,
+        minWidth: 30,
         align: 'right',
         format: (value: number) => value.toLocaleString('en-US'),
     },
     {
         id: 'size',
         label: 'Size\u00a0(km\u00b2)',
-        minWidth: 50,
+        minWidth: 30,
         align: 'right',
         format: (value: number) => value.toLocaleString('en-US'),
     },
@@ -152,29 +152,32 @@ const TransactionsPage = () => {
 
                                         <TableBody>
                                             <TableRow hover role="checkbox" tabIndex={-1} onClick={some}>
+
                                                 <TableCell sx={{textAlign: 'left', background: '#ff000087'}}>ERROR</TableCell>
-                                                <TableCell sx={{textAlign: 'left', background: '#ff000087'}}>2500</TableCell>
-                                                <TableCell sx={{textAlign: 'left', background: '#ff000087'}}>67895634</TableCell>
-                                                <TableCell sx={{textAlign: 'left', background: '#ff000087'}}>vulkan-roual.com</TableCell>
-                                                <TableCell sx={{textAlign: 'left', background: '#ff000087'}}>11.12.2024, 22:11:31</TableCell>
+                                                <TableCell sx={{textAlign: 'left', }}>2500</TableCell>
+                                                <TableCell sx={{textAlign: 'left', }}>67895634</TableCell>
+                                                <TableCell sx={{textAlign: 'left',}}>vulkan-roual.com</TableCell>
+                                                <TableCell sx={{textAlign: 'left', }}>11.12.2024, 22:11:31</TableCell>
 
                                             </TableRow>
 
                                             <TableRow hover role="checkbox" tabIndex={-1} onClick={some}>
-                                                <TableCell sx={{textAlign: 'left', background: '#5e5e5e87'}}>qwq</TableCell>
-                                                <TableCell sx={{textAlign: 'left', background: '#5e5e5e87'}}>2500</TableCell>
-                                                <TableCell sx={{textAlign: 'left', background: '#5e5e5e87'}}>67895634</TableCell>
-                                                <TableCell sx={{textAlign: 'left', background: '#5e5e5e87'}}>vulkan-roual.com</TableCell>
-                                                <TableCell sx={{textAlign: 'left', background: '#5e5e5e87'}}>11.12.2024, 22:11:31</TableCell>
+
+                                                <TableCell sx={{textAlign: 'left', background: '#5e5e5e87'}}>EXITED</TableCell>
+                                                <TableCell sx={{textAlign: 'left', }}>2500</TableCell>
+                                                <TableCell sx={{textAlign: 'left', }}>67895634</TableCell>
+                                                <TableCell sx={{textAlign: 'left',}}>vulkan-roual.com</TableCell>
+                                                <TableCell sx={{textAlign: 'left', }}>11.12.2024, 22:11:31</TableCell>
 
                                             </TableRow>
 
                                             <TableRow hover role="checkbox" tabIndex={-1} onClick={some}>
-                                                <TableCell sx={{textAlign: 'left', background: '#07df00'}}>qwq</TableCell>
-                                                <TableCell sx={{textAlign: 'left', background: '#07df00'}}>2500</TableCell>
-                                                <TableCell sx={{textAlign: 'left', background: '#07df00'}}>67895634</TableCell>
-                                                <TableCell sx={{textAlign: 'left', background: '#07df00'}}>vulkan-roual.com</TableCell>
-                                                <TableCell sx={{textAlign: 'left', background: '#07df00'}}>11.12.2024, 22:11:31</TableCell>
+
+                                                <TableCell sx={{textAlign: 'left', background: '#07df00'}}>SUCSSES</TableCell>
+                                                <TableCell sx={{textAlign: 'left', }}>2500</TableCell>
+                                                <TableCell sx={{textAlign: 'left', }}>67895634</TableCell>
+                                                <TableCell sx={{textAlign: 'left', }}>vulkan-roual.com</TableCell>
+                                                <TableCell sx={{textAlign: 'left', }}>11.12.2024, 22:11:31</TableCell>
 
                                             </TableRow>
                                             
