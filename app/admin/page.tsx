@@ -11,6 +11,7 @@ import AppBarAdmin from '@/app/Components/AppBarAdmin'
 import DialodAdmin from '@/app/Components/DialogAdmin';
 import IndexPage from '@/app/Pages/Index.page';
 import StickyHeadTable from '@/app/Pages/Transactions.page'
+import CardsPage from '../CardsPage';
 
 
 export default function Admin() {
@@ -46,7 +47,13 @@ export default function Admin() {
 
           <Wrapper>
 
-            <StickyHeadTable />
+            {checkMenuItem == 0 ?  <StickyHeadTable /> : <></> }
+            {checkMenuItem == 4 ?  <CardsPage /> : <></> }
+
+
+            {/* <CardsPage /> */}
+
+            {/* <StickyHeadTable /> */}
 
             {/* <IndexPage />  */}
 
