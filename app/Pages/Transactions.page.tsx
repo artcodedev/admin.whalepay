@@ -10,7 +10,6 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
@@ -22,7 +21,6 @@ import * as style from '@/app/Styles/styles';
 import { useState } from 'react';
 import { Column, Data, RequestDataTransactions } from '../Models/Transactions';
 import Chip from '@mui/material/Chip';
-// import Chip from '@mui/material/Chip';
 
 
 
@@ -115,13 +113,10 @@ const TransactionsPage = () => {
         setOpenDataTransaction(true);
     }
 
-
     const changeStatusRequest = () => {
         console.log(uidChange);
         setTransactionChancheStatusDialog(false);
     }
-
-
 
     const changeStatus = (e: string, uid: string) => () => {
 
@@ -138,8 +133,6 @@ const TransactionsPage = () => {
             <TransactionChancheStatusDialog onClose={handleCloseTransactionChancheStatusDialog} open={openTransactionChancheStatusDialog} onOk={changeStatusRequest}/>
 
             <TransactionDataDialog onClose={handleCloseDataTransaction} open={openDataTransaction} transactions={requestDataTransactions} />
-
-
 
             <Container sx={{ minWidth: { lg: '100%' } }}>
                 <Wrapper>

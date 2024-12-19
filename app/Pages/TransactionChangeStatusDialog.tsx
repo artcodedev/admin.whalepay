@@ -5,10 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import Box from '@mui/material/Box';
 import { RefObject, useRef } from 'react';
-import { RequestDataTransactions } from '../Models/Transactions';
-import BoxDataTransactions from '@/app/Components/BoxDataTransaction';
 import Chip from '@mui/material/Chip';
 
 interface Props {
@@ -37,9 +34,9 @@ const TransactionChancheStatusDialog = ({ ...pr }: Props) => {
 
                 <DialogActions>
 
-                    <Button onClick={pr.onOk}>Да</Button>
+                    <Button color='success' variant="contained" onClick={pr.onOk}>Да</Button>
 
-                    <Button onClick={pr.onClose}>Отмена</Button>
+                    <Button color='error' variant="contained" onClick={pr.onClose}>Отмена</Button>
 
                 </DialogActions>
 

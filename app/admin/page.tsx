@@ -8,7 +8,7 @@ import Container from '@mui/material/Container';
 import Wrapper from '../Components/Wrapper';
 import DrawerAdmin from '@/app/Components/DrawerAdmin';
 import AppBarAdmin from '@/app/Components/AppBarAdmin'
-import DialodAdmin from '@/app/Components/DialogAdmin';
+import DialodLogoutAdmin from '@/app/Components/DialogLogoutAdmin';
 import IndexPage from '@/app/Pages/Index.page';
 import StickyHeadTable from '@/app/Pages/Transactions.page'
 import CardsPage from '../Pages/Cards.page';
@@ -41,7 +41,7 @@ const Admin = () => {
 
           <AppBarAdmin onClickIconButton={toggleDrawer} onCloseValue={true} onClick={actionLogOut} />
 
-          <DialodAdmin openLogOut={openLogOut} onCloseValue={false} onClickFalseValue={false} onClose={toogleDialog} onClickFalse={setOpenLogOut} />
+          <DialodLogoutAdmin openLogOut={openLogOut} onCloseValue={false} onClickFalseValue={false} onClose={toogleDialog} onClickFalse={setOpenLogOut} />
 
           <Wrapper>
 

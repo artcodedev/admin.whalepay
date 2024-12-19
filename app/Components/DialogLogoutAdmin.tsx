@@ -16,7 +16,7 @@ interface Props {
 }
 
 
-const DialodAdmin = ({...pr}: Props) => {
+const DialodLogoutAdmin = ({...pr}: Props) => {
 
     return (
         <>
@@ -43,4 +43,4 @@ const DialodAdmin = ({...pr}: Props) => {
     );
 }
 
-export default DialodAdmin;
+export default DialodLogoutAdmin;
