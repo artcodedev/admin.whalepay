@@ -32,7 +32,7 @@ const IndexPage = () => {
                         <Container style={style.wrapp_admin_n_width} >
 
                             <Typography variant="h4" color='info' sx={style.main_title}>
-                                Welcome to Whale<span>Pay</span>
+                               Добро пожаловать в Whale<span>Pay</span>
                             </Typography>
 
                         </Container>
@@ -44,7 +44,7 @@ const IndexPage = () => {
                         <Container style={style.wrapp_admin_n_width} >
 
                             <Typography variant="h6" color='info' sx={style.main_title_upper}>
-                                All pay with our service 😊 🔥
+                                Все оплаты с нашим сервисом 😊 🔥
                             </Typography>
 
                         </Container>

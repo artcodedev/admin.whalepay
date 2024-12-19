@@ -11,10 +11,11 @@ import AppBarAdmin from '@/app/Components/AppBarAdmin'
 import DialodAdmin from '@/app/Components/DialogAdmin';
 import IndexPage from '@/app/Pages/Index.page';
 import StickyHeadTable from '@/app/Pages/Transactions.page'
-import CardsPage from '../CardsPage';
+import CardsPage from '../Pages/Cards.page';
+import Banks from '../Pages/Banks.page';
 
 
-export default function Admin() {
+const Admin = () => {
 
   const [openLogOut, setOpenLogOut] = React.useState(false);
   const [openDrawer, setOpenDrawer] = React.useState<boolean>(false);
@@ -22,12 +23,9 @@ export default function Admin() {
 
   const toggleDrawer = (newOpen: boolean) => (): void => { setOpenDrawer(newOpen); };
 
-  const toogleDialog = (cl: boolean) => (): void => { setOpenLogOut(cl) }
+  const toogleDialog = (cl: boolean) => (): void => { setOpenLogOut(cl); }
 
-  const checkMenu = (item: number) => {
-    console.log(item)
-    setCheckMenuItem(item)
-  }
+  const checkMenu = (item: number) => { setCheckMenuItem(item); }
 
   const actionLogOut = () => { setOpenLogOut(true); }
 
@@ -47,18 +45,14 @@ export default function Admin() {
 
           <Wrapper>
 
+            {checkMenuItem == null ?  <IndexPage /> : <></>}
+
+            {checkMenuItem == 1 ?  <Banks /> : <></>}
+
             {checkMenuItem == 0 ?  <StickyHeadTable /> : <></> }
-            {checkMenuItem == 4 ?  <CardsPage /> : <></> }
 
-
-            {/* <CardsPage /> */}
-
-            {/* <StickyHeadTable /> */}
-
-            {/* <IndexPage />  */}
-
-            {/* <TransactionsPage /> */}
-
+            {checkMenuItem == 3 ?  <CardsPage /> : <></> } 
+            
           </Wrapper>
 
         </Wrapper>
@@ -70,3 +64,5 @@ export default function Admin() {
 
   );
 }
+
+export default Admin;

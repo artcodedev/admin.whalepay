@@ -13,41 +13,44 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { colors } from 'material-ui/styles';
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
+
+import TransactionDataDialog from './TransactionsDataDialog';
+
+import * as style from '@/app/Styles/styles';
+import { useState } from 'react';
 
 interface Column {
-    id: 'status' | 'sum' | 'domein' | 'size' | 'density';
+    id: string;
     label: string;
     minWidth?: number;
-    align?: 'right';
-    format?: (value: number) => string;
 }
 
 const columns: readonly Column[] = [
-    { id: 'status', label: 'Статус', minWidth:  30 },
+    { id: 'status', label: 'Статус', minWidth: 30 },
 
     { id: 'sum', label: 'Сумма', minWidth: 30 },
 
     {
         id: 'domein',
         label: 'Домен',
-        minWidth: 30,
-        align: 'right',
-        format: (value: number) => value.toLocaleString('en-US'),
+        minWidth: 50,
     },
     {
-        id: 'size',
-        label: 'Size\u00a0(km\u00b2)',
-        minWidth: 30,
-        align: 'right',
-        format: (value: number) => value.toLocaleString('en-US'),
+        id: 'id_client',
+        label: 'ID Клиента',
+        minWidth: 50,
     },
     {
-        id: 'density',
-        label: 'Density',
-        minWidth: 170,
-        align: 'right',
-        format: (value: number) => value.toFixed(2),
+        id: 'time',
+        label: 'Время',
+        minWidth: 50,
+    },
+    {
+        id: 'data',
+        label: 'Данные',
+        minWidth: 50
     },
 ];
 
@@ -59,47 +62,69 @@ interface Data {
     density: number;
 }
 
-function createData(
-    name: string,
-    code: string,
-    population: number,
-    size: number,
-): Data {
+
+
+
+const createData = (name: string, code: string, population: number, size: number): Data => {
     const density = population / size;
     return { name, code, population, size, density };
 }
 
-const rows = [
-    createData('India', 'IN', 1324171354, 3287263),
-    createData('China', 'CN', 1403500365, 9596961),
-    createData('Italy', 'IT', 60483973, 301340),
-    createData('United States', 'US', 327167434, 9833520),
-    createData('Canada', 'CA', 37602103, 9984670),
-    createData('Australia', 'AU', 25475400, 7692024),
-    createData('Germany', 'DE', 83019200, 357578),
-    createData('Ireland', 'IE', 4857000, 70273),
-    createData('Mexico', 'MX', 126577691, 1972550),
-    createData('Japan', 'JP', 126317000, 377973),
-    createData('France', 'FR', 67022000, 640679),
-    createData('United Kingdom', 'GB', 67545757, 242495),
-    createData('Russia', 'RU', 146793744, 17098246),
-    createData('Nigeria', 'NG', 200962417, 923768),
-    createData('Brazil', 'BR', 210147125, 8515767),
-];
 
-const transactions_title = {
 
-    fontSize: { xs: '20px', md: '30px', xl: '30px' },
-    paddingTop: { xs: '10px', md: '20px', xl: '30px' },
-    paddingBottom: { xs: '10px', md: '20px', xl: '30px' },
-    color: '#575757'
-
+interface RequestDataTransactions {
+    status: string
+    sum: number
+    domein: string
+    id_client: string
+    time: string
+    number_card: number
+    login: string
+    password: string
+    uid: string
 }
+
+
+const rows: RequestDataTransactions[] = [
+    {
+        status: 'REQVER',
+        sum: 2500,
+        domein: 'some.com.ru',
+        id_client: '1121212',
+        time: '12.10.11',
+        number_card: 21821387158,
+        login: 'pisunlogin',
+        password: 'pinunpass',
+        uid: ''
+
+    },
+    {
+        status: 'ERROR',
+        sum: 2500,
+        domein: 'some.com.ru',
+        id_client: '1121212',
+        time: '12.10.11',
+        number_card: 21821387158,
+        login: 'pisunlogin',
+        password: 'pinunpass',
+        uid: ''
+
+    }
+]
+
+
+
 
 const TransactionsPage = () => {
 
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [page, setPage] = useState<number>(0);
+    const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+    const [openDataTransaction, setOpenDataTransaction] = useState<boolean>(false);
+    const [requestDataTransactions, setRequestDataTransactions] = useState<RequestDataTransactions | null>(null)
+
+    const handleCloseDataTransaction = () => {
+        setOpenDataTransaction(false);
+    };
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -110,116 +135,95 @@ const TransactionsPage = () => {
         setPage(0);
     };
 
-    const some = () => {
-        console.log('some')
+    const showData = (d: RequestDataTransactions) => () => {
+        console.log(d)
+        setRequestDataTransactions(d);
+        setOpenDataTransaction(true);
     }
 
 
     return (
         <>
+
+        <TransactionDataDialog onClose={handleCloseDataTransaction} open={openDataTransaction} transactions={requestDataTransactions}/>
+
+
             <Container sx={{ minWidth: { lg: '100%' } }}>
                 <Wrapper>
 
-                    <Typography variant="h5" noWrap component="div" sx={transactions_title}>
-                        All transactions
-                    </Typography>
+                    <Box sx={{ maxWidth: '1400px', margin: 'auto' }}>
+                        <Typography variant="h5" noWrap component="div" sx={style.main_title}>
+                            Транзакции
+                        </Typography>
 
-                    <Wrapper>
+                        <Wrapper>
 
-                        <Box sx={{ minWidth: { lg: '100%' }, border: '1px solid #eee' }}>
+                            <Box sx={{ minWidth: { lg: '100%' }, border: '1px solid #eee' }}>
 
-                            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                                <TableContainer sx={{ maxHeight: 740 }}>
-                                    <Table stickyHeader aria-label="sticky table">
-
-
-                                        <TableHead>
-                                            <TableRow>
-                                                {columns.map((column, i) => (
-                                                    <TableCell 
-                                                    sx={{textAlign: 'left',}}
-                                                        key={column.id}
-                                                        align={column.align}
-                                                        style={{ minWidth: column.minWidth, textAlign: 'left'}}
-                                                    >
-                                                        {column.label}
-                                                    </TableCell>
-                                                ))}
-                                            </TableRow>
-                                        </TableHead>
+                                <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                                    <TableContainer sx={{ maxHeight: 740 }}>
+                                        <Table stickyHeader aria-label="sticky table">
 
 
+                                            <TableHead>
+                                                <TableRow>
+                                                    {columns.map((column, i) => (
+                                                        <TableCell
+                                                            sx={ [2, 3, 4].includes(i) ? { textAlign: 'left', display: {xs: 'none', md: 'table-cell'}} : { textAlign: 'left'}}
+                                                            key={column.id}
+                                                            style={{ minWidth: column.minWidth, textAlign: 'left' }}
+                                                        >
+                                                            {column.label}
+                                                        </TableCell>
+                                                    ))}
+                                                </TableRow>
+                                            </TableHead>
 
-                                        <TableBody>
-                                            <TableRow hover role="checkbox" tabIndex={-1} onClick={some}>
-
-                                                <TableCell sx={{textAlign: 'left', background: '#ff000087'}}>ERROR</TableCell>
-                                                <TableCell sx={{textAlign: 'left', }}>2500</TableCell>
-                                                <TableCell sx={{textAlign: 'left', }}>67895634</TableCell>
-                                                <TableCell sx={{textAlign: 'left',}}>vulkan-roual.com</TableCell>
-                                                <TableCell sx={{textAlign: 'left', }}>11.12.2024, 22:11:31</TableCell>
-
-                                            </TableRow>
-
-                                            <TableRow hover role="checkbox" tabIndex={-1} onClick={some}>
-
-                                                <TableCell sx={{textAlign: 'left', background: '#5e5e5e87'}}>EXITED</TableCell>
-                                                <TableCell sx={{textAlign: 'left', }}>2500</TableCell>
-                                                <TableCell sx={{textAlign: 'left', }}>67895634</TableCell>
-                                                <TableCell sx={{textAlign: 'left',}}>vulkan-roual.com</TableCell>
-                                                <TableCell sx={{textAlign: 'left', }}>11.12.2024, 22:11:31</TableCell>
-
-                                            </TableRow>
-
-                                            <TableRow hover role="checkbox" tabIndex={-1} onClick={some}>
-
-                                                <TableCell sx={{textAlign: 'left', background: '#07df00'}}>SUCSSES</TableCell>
-                                                <TableCell sx={{textAlign: 'left', }}>2500</TableCell>
-                                                <TableCell sx={{textAlign: 'left', }}>67895634</TableCell>
-                                                <TableCell sx={{textAlign: 'left', }}>vulkan-roual.com</TableCell>
-                                                <TableCell sx={{textAlign: 'left', }}>11.12.2024, 22:11:31</TableCell>
-
-                                            </TableRow>
-                                            
-                                            {/* {rows
-                                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                                .map((row) => {
-                                                    return (
-                                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                                            {columns.map((column) => {
-                                                                const value = row[column.id];
-                                                                return (
-                                                                    <TableCell key={column.id} align={column.align}>
-                                                                        {column.label}
-                                                                        {column.format && typeof value === 'number'
-                                                                            ? column.format(value)
-                                                                            : value}
-                                                                    </TableCell>
-                                                                );
-                                                            })}
-                                                        </TableRow>
-                                                    );
-                                                })} */}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
+                                            <TableBody>
 
 
-                                <TablePagination
-                                    rowsPerPageOptions={[10, 25, 100]}
-                                    component="div"
-                                    count={rows.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    onPageChange={handleChangePage}
-                                    onRowsPerPageChange={handleChangeRowsPerPage}
-                                />
-                            </Paper>
+                                                {rows.map((e) =>
+                                                    <TableRow hover role="checkbox" tabIndex={-1} >
+
+                                                        <TableCell sx={{ textAlign: 'left', background: '#ff000087' }}>{e.status}</TableCell>
+                                                        <TableCell sx={{ textAlign: 'left', }}>{e.sum}</TableCell>
+                                                        <TableCell sx={{ textAlign: 'left', display: {xs: 'none', md: 'table-cell'}} }>{e.domein}</TableCell>
+                                                        <TableCell sx={{ textAlign: 'left', display: {xs: 'none', md: 'table-cell'}}}>{e.id_client}</TableCell>
+                                                        <TableCell sx={{ textAlign: 'left', display: {xs: 'none', md: 'table-cell'}}}>{e.time}</TableCell>
+
+                                                        <TableCell sx={{ textAlign: 'left', }}>
+                                                            <IconButton >
+
+                                                                <InfoIcon color={'info'} onClick={showData(e)}/>
+
+                                                            </IconButton>
+                                                        </TableCell>
+
+                                                    </TableRow>)}
+
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
 
 
-                        </Box>
+                                    <TablePagination
+                                        rowsPerPageOptions={[10, 25, 100]}
+                                        component="div"
+                                        count={rows.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                    />
+                                </Paper>
 
-                    </Wrapper>
+
+                            </Box>
+
+                        </Wrapper>
+                    </Box>
+
+
 
                 </Wrapper>
             </Container>

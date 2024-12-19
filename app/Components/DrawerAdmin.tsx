@@ -44,10 +44,10 @@ const MenuItem: MenuItemData[] = [
         icon: <CurrencyExchangeIcon />
     },
 
-    {
-        title: "Смс банка",
-        icon: <SmsIcon />
-    },
+    // {
+    //     title: "Смс банка",
+    //     icon: <SmsIcon />
+    // },
     {
         title: "Карты",
         icon: <CreditCardIcon />

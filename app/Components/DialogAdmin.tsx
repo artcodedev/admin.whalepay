@@ -24,19 +24,19 @@ const DialodAdmin = ({...pr}: Props) => {
         <>
             <Dialog open={pr.openLogOut} onClose={pr.onClose(pr.onCloseValue)}>
 
-                <DialogTitle>Log out</DialogTitle>
+                <DialogTitle>Выход</DialogTitle>
 
                 <DialogContent>
 
-                    <DialogContentText>Are you want log out?</DialogContentText>
+                    <DialogContentText>Вы действительно ходите выйти ?</DialogContentText>
 
                 </DialogContent>
 
                 <DialogActions>
 
-                    <Button variant="contained" color='error' onClick={() => { pr.onClickFalse(pr.onClickFalseValue) }}>No</Button>
+                    <Button variant="contained" color='error' onClick={() => { pr.onClickFalse(pr.onClickFalseValue) }}>Нет</Button>
 
-                    <Button variant="contained" color='success' autoFocus>Yes</Button>
+                    <Button variant="contained" color='success' autoFocus>Да</Button>
 
                 </DialogActions>
 
