@@ -40,7 +40,7 @@ const BoxDataTransactions = ({ ...pr }: BoxData) => {
                 onClose={handleClose}
                 message={`${typeSnackbar} скопирован!`}
             />
-            <Box>
+            <Box sx={{marginTop: '7px'}}>
 
                 {pr.type}:&nbsp;<span style={{ color: '#000' }}>{pr.data}</span>
 

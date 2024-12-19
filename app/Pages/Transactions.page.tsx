@@ -16,37 +16,44 @@ import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 
 import TransactionDataDialog from './TransactionsDataDialog';
+import TransactionChancheStatusDialog from './TransactionChangeStatusDialog';
 
 import * as style from '@/app/Styles/styles';
 import { useState } from 'react';
 import { Column, Data, RequestDataTransactions } from '../Models/Transactions';
+import Chip from '@mui/material/Chip';
+// import Chip from '@mui/material/Chip';
 
 
 
 const columns: readonly Column[] = [
-    { id: 'status', label: 'Статус', minWidth: 30 },
+    { id: 'status', label: 'Статус', minWidth: 30, maxWidth: 100 },
 
-    { id: 'sum', label: 'Сумма', minWidth: 30 },
+    { id: 'sum', label: 'Сумма', minWidth: 30, maxWidth: 100 },
 
     {
         id: 'domein',
         label: 'Домен',
         minWidth: 50,
+        maxWidth: 100
     },
     {
         id: 'id_client',
         label: 'ID Клиента',
         minWidth: 50,
+        maxWidth: 100
     },
     {
         id: 'time',
         label: 'Время',
         minWidth: 50,
+        maxWidth: 100
     },
     {
         id: 'data',
         label: 'Данные',
-        minWidth: 50
+        minWidth: 50,
+        maxWidth: 100
     },
 ];
 
@@ -66,11 +73,11 @@ const rows: RequestDataTransactions[] = [
         number_card: 21821387158,
         login: 'pisunlogin',
         password: 'pinunpass',
-        uid: ''
+        uid: '1111111'
 
     },
     {
-        status: 'ERROR',
+        status: 'SUCCESS',
         sum: 2500,
         domein: 'some.com.ru',
         id_client: '1121212',
@@ -78,42 +85,61 @@ const rows: RequestDataTransactions[] = [
         number_card: 21821387158,
         login: 'pisunlogin',
         password: 'pinunpass',
-        uid: ''
+        uid: '2222222'
 
-    }
+    },
+
 ]
 
 const TransactionsPage = () => {
 
-    const [page, setPage] = useState<number>(0);
-    const [rowsPerPage, setRowsPerPage] = useState<number>(10);
     const [openDataTransaction, setOpenDataTransaction] = useState<boolean>(false);
-    const [requestDataTransactions, setRequestDataTransactions] = useState<RequestDataTransactions | null>(null)
+    const [requestDataTransactions, setRequestDataTransactions] = useState<RequestDataTransactions | null>(null);
 
-    const handleCloseDataTransaction = () => {
+    const [openTransactionChancheStatusDialog, setTransactionChancheStatusDialog] = useState<boolean>(false);
+    const [uidChange, setUidChanche] = useState<string | null>(null);
+
+    const sx_style = { textAlign: 'left', display: { xs: 'none', md: 'table-cell' } };
+    const sx_st_left = { textAlign: 'left' };
+
+    const handleCloseTransactionChancheStatusDialog = (): void => {
+        setTransactionChancheStatusDialog(false);
+    };
+
+    const handleCloseDataTransaction = (): void => {
         setOpenDataTransaction(false);
     };
 
-    const handleChangePage = (event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-    };
-
-    const showData = (d: RequestDataTransactions) => () => {
-        console.log(d)
+    const showData = (d: RequestDataTransactions) => (): void => {
         setRequestDataTransactions(d);
         setOpenDataTransaction(true);
     }
 
 
+    const changeStatusRequest = () => {
+        console.log(uidChange);
+        setTransactionChancheStatusDialog(false);
+    }
+
+
+
+    const changeStatus = (e: string, uid: string) => () => {
+
+        if (e !== 'SUCCESS') {
+            setUidChanche(uid);
+            setTransactionChancheStatusDialog(true);
+        }
+
+    }
+
+
     return (
         <>
+            <TransactionChancheStatusDialog onClose={handleCloseTransactionChancheStatusDialog} open={openTransactionChancheStatusDialog} onOk={changeStatusRequest}/>
 
-        <TransactionDataDialog onClose={handleCloseDataTransaction} open={openDataTransaction} transactions={requestDataTransactions}/>
+            <TransactionDataDialog onClose={handleCloseDataTransaction} open={openDataTransaction} transactions={requestDataTransactions} />
+
+
 
             <Container sx={{ minWidth: { lg: '100%' } }}>
                 <Wrapper>
@@ -131,12 +157,11 @@ const TransactionsPage = () => {
                                     <TableContainer sx={{ maxHeight: 740 }}>
                                         <Table stickyHeader aria-label="sticky table">
 
-
                                             <TableHead>
                                                 <TableRow>
                                                     {columns.map((column, i) => (
                                                         <TableCell
-                                                            sx={ [2, 3, 4].includes(i) ? { textAlign: 'left', display: {xs: 'none', md: 'table-cell'}} : { textAlign: 'left'}}
+                                                            sx={[2, 3, 4].includes(i) ? sx_style : sx_st_left}
                                                             key={column.id}
                                                             style={{ minWidth: column.minWidth, textAlign: 'left' }}
                                                         >
@@ -148,40 +173,55 @@ const TransactionsPage = () => {
 
                                             <TableBody>
 
-
                                                 {rows.map((e) =>
                                                     <TableRow hover role="checkbox" tabIndex={-1} >
 
-                                                        <TableCell sx={{ textAlign: 'left', background: '#ff000087' }}>{e.status}</TableCell>
-                                                        <TableCell sx={{ textAlign: 'left', }}>{e.sum}</TableCell>
-                                                        <TableCell sx={{ textAlign: 'left', display: {xs: 'none', md: 'table-cell'}} }>{e.domein}</TableCell>
-                                                        <TableCell sx={{ textAlign: 'left', display: {xs: 'none', md: 'table-cell'}}}>{e.id_client}</TableCell>
-                                                        <TableCell sx={{ textAlign: 'left', display: {xs: 'none', md: 'table-cell'}}}>{e.time}</TableCell>
+                                                        <TableCell sx={sx_st_left}>
 
-                                                        <TableCell sx={{ textAlign: 'left', }}>
+                                                            <Chip
+
+                                                                onClick={changeStatus(e.status, e.uid)}
+
+                                                                clickable
+                                                                label={e.status}
+
+                                                                color={
+
+                                                                    e.status === 'ERROR' ? 'error' :
+                                                                        e.status === 'REQVER' ? 'secondary' :
+                                                                            e.status === 'TIMEEND' ? 'info' :
+                                                                                e.status === 'SUCCESS' ? 'success' :
+                                                                                    e.status === 'PENDING' ? 'warning' : 'error'
+
+                                                                }
+
+                                                            />
+
+                                                        </TableCell>
+
+                                                        <TableCell sx={sx_st_left}>{e.sum}</TableCell>
+
+                                                        <TableCell sx={sx_style}>{e.domein}</TableCell>
+
+                                                        <TableCell sx={sx_style}>{e.id_client}</TableCell>
+
+                                                        <TableCell sx={sx_style}>{e.time}</TableCell>
+
+                                                        <TableCell sx={sx_st_left}>
                                                             <IconButton >
 
-                                                                <InfoIcon color={'info'} onClick={showData(e)}/>
+                                                                <InfoIcon color={'info'} onClick={showData(e)} />
 
                                                             </IconButton>
                                                         </TableCell>
 
-                                                    </TableRow>)}
+                                                    </TableRow>
+                                                )}
 
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
 
-
-                                    <TablePagination
-                                        rowsPerPageOptions={[10, 25, 100]}
-                                        component="div"
-                                        count={rows.length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={page}
-                                        onPageChange={handleChangePage}
-                                        onRowsPerPageChange={handleChangeRowsPerPage}
-                                    />
                                 </Paper>
 
                             </Box>

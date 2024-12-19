@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Snackbar from '@mui/material/Snackbar';
 import React from 'react';
+import BoxDataTransactions from './BoxDataTransaction';
 
 interface Props {
     open: boolean
@@ -26,8 +27,8 @@ const contentCopyIcon = { fontSize: '14px', marginLeft: '10px', cursor: 'pointer
 const DataCards = ({ ...pr }: Props) => {
 
     const descriptionElementRef = useRef<HTMLElement>(null);
-    const [loading, setLoading] = useState<boolean>(false);
 
+    const [loading, setLoading] = useState<boolean>(false);
     const [snackbar, setSnackbar] = useState<boolean>(false);
     const [typeSnackbar, setTypeSnackbar] = useState<string>('');
     const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(undefined);
@@ -62,22 +63,9 @@ const DataCards = ({ ...pr }: Props) => {
 
                         {loading ? <Loading /> : <>
 
-                            <Box>
-
-                                Логин:&nbsp;
-                                <span style={{ color: '#000' }}>loagin_login</span>
-
-                                <ContentCopyIcon onClick={copyData('login copy', 'som txet')} sx={contentCopyIcon} />
-
-                            </Box>
-
-                            <Box>
-
-                                Пароль:&nbsp;
-                                <span style={{ color: '#000', textDecoration: 'underline' }}>20923n785&*^RFo2378</span>
-                                <ContentCopyIcon onClick={copyData('login copy', 'som txet')} sx={contentCopyIcon} />
-
-                            </Box>
+                            <BoxDataTransactions type="Логин" data='qdwq@.asdm' />
+                            
+                            <BoxDataTransactions type="Пароль" data='12313132131' />
 
                         </>
                         }

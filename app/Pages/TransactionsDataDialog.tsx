@@ -5,7 +5,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Box from '@mui/material/Box';
-import { useRef } from 'react';
+import { RefObject, useRef } from 'react';
 import { RequestDataTransactions } from '../Models/Transactions';
 import BoxDataTransactions from '@/app/Components/BoxDataTransaction';
 
@@ -18,7 +18,7 @@ interface Props {
 
 const TransactionDataDialog = ({ ...pr }: Props) => {
 
-    const descriptionElementRef = useRef<HTMLElement>(null);
+    const descriptionElementRef: RefObject<HTMLElement | null> = useRef<HTMLElement>(null);
 
     const sx_tr = {
         display: {
