@@ -35,12 +35,6 @@ const DataCards = ({ ...pr }: Props) => {
 
     const handleClose = () => { setSnackbar(false); }
 
-    const copyData = (st: string, data: string) => () => {
-        setTypeSnackbar(st);
-        setSnackbar(true);
-        navigator.clipboard.writeText(data)
-    }
-
     const handleExited = () => { setMessageInfo(undefined); };
 
     return (
@@ -64,7 +58,7 @@ const DataCards = ({ ...pr }: Props) => {
                         {loading ? <Loading /> : <>
 
                             <BoxDataTransactions type="Логин" data='qdwq@.asdm' />
-                            
+
                             <BoxDataTransactions type="Пароль" data='12313132131' />
 
                         </>
