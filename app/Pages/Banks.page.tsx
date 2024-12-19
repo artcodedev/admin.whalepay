@@ -11,19 +11,14 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import Switch from "@mui/material/Switch";
-import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import SnackbarAlert from "../Components/SnackbarAlert";
 
 import * as style from '@/app/Styles/styles';
 
-
 interface Column {
     label: string;
     minWidth?: number;
-    align?: 'right';
-    format?: (value: number) => string;
 }
 
 const columns: readonly Column[] = [
@@ -93,7 +88,6 @@ const Banks = () => {
                                                     <TableCell
                                                         
                                                         sx={i == 2 ? { textAlign: 'left', display: {xs: 'none', md: 'block'}} : { textAlign: 'left'} }
-                                                        align={column.align}
                                                         style={{ minWidth: column.minWidth, textAlign: 'left' }}
                                                     >
                                                         {column.label}

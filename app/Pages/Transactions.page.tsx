@@ -3,7 +3,6 @@ import Container from '@mui/material/Container';
 import Wrapper from '../Components/Wrapper';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -20,12 +19,9 @@ import TransactionDataDialog from './TransactionsDataDialog';
 
 import * as style from '@/app/Styles/styles';
 import { useState } from 'react';
+import { Column, Data, RequestDataTransactions } from '../Models/Transactions';
 
-interface Column {
-    id: string;
-    label: string;
-    minWidth?: number;
-}
+
 
 const columns: readonly Column[] = [
     { id: 'status', label: 'Статус', minWidth: 30 },
@@ -54,36 +50,11 @@ const columns: readonly Column[] = [
     },
 ];
 
-interface Data {
-    name: string;
-    code: string;
-    population: number;
-    size: number;
-    density: number;
-}
-
-
-
 
 const createData = (name: string, code: string, population: number, size: number): Data => {
     const density = population / size;
     return { name, code, population, size, density };
 }
-
-
-
-interface RequestDataTransactions {
-    status: string
-    sum: number
-    domein: string
-    id_client: string
-    time: string
-    number_card: number
-    login: string
-    password: string
-    uid: string
-}
-
 
 const rows: RequestDataTransactions[] = [
     {
@@ -111,9 +82,6 @@ const rows: RequestDataTransactions[] = [
 
     }
 ]
-
-
-
 
 const TransactionsPage = () => {
 
@@ -146,7 +114,6 @@ const TransactionsPage = () => {
         <>
 
         <TransactionDataDialog onClose={handleCloseDataTransaction} open={openDataTransaction} transactions={requestDataTransactions}/>
-
 
             <Container sx={{ minWidth: { lg: '100%' } }}>
                 <Wrapper>
@@ -217,13 +184,10 @@ const TransactionsPage = () => {
                                     />
                                 </Paper>
 
-
                             </Box>
 
                         </Wrapper>
                     </Box>
-
-
 
                 </Wrapper>
             </Container>

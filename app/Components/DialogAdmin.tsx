@@ -13,12 +13,10 @@ interface Props {
     onClickFalseValue: boolean
     onClose: (cl: boolean) => () => void
     onClickFalse: (cl: boolean) => void
-    // onClickTrue: () => void
 }
 
 
 const DialodAdmin = ({...pr}: Props) => {
-
 
     return (
         <>

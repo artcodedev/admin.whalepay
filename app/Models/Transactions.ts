@@ -9,3 +9,17 @@ export interface RequestDataTransactions {
     password: string
     uid: string
 }
+
+export interface Data {
+    name: string;
+    code: string;
+    population: number;
+    size: number;
+    density: number;
+}
+
+export interface Column {
+    id: string;
+    label: string;
+    minWidth?: number;
+}

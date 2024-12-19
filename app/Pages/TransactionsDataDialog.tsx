@@ -1,11 +1,10 @@
-import Dialog, { DialogProps } from '@mui/material/Dialog';
+import Dialog from '@mui/material/Dialog';
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Box from '@mui/material/Box';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useRef } from 'react';
 import { RequestDataTransactions } from '../Models/Transactions';
 import BoxDataTransactions from '@/app/Components/BoxDataTransaction';
@@ -19,11 +18,7 @@ interface Props {
 
 const TransactionDataDialog = ({ ...pr }: Props) => {
 
-
-
     const descriptionElementRef = useRef<HTMLElement>(null);
-
-    const BoxData = (some: string) => { return <>hello {some}</> }
 
     const sx_tr = {
         display: {
@@ -31,7 +26,6 @@ const TransactionDataDialog = ({ ...pr }: Props) => {
             md: 'none'
         }
     }
-
 
     return (
         <>
@@ -73,6 +67,5 @@ const TransactionDataDialog = ({ ...pr }: Props) => {
     );
 
 }
-
 
 export default TransactionDataDialog;

@@ -43,11 +43,6 @@ const MenuItem: MenuItemData[] = [
         title: "Вывод",
         icon: <CurrencyExchangeIcon />
     },
-
-    // {
-    //     title: "Смс банка",
-    //     icon: <SmsIcon />
-    // },
     {
         title: "Карты",
         icon: <CreditCardIcon />

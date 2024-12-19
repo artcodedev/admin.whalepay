@@ -9,17 +9,10 @@ import TableHead from "@mui/material/TableHead";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
 import Switch from "@mui/material/Switch";
-import { CommentsDisabledOutlined } from "@mui/icons-material";
 import Loading from "../Components/Loading";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from '@mui/icons-material/Info';
-import Dialog, { DialogProps } from '@mui/material/Dialog';
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogActions from "@mui/material/DialogActions";
-import Button from "@mui/material/Button";
 
 import * as style from '@/app/Styles/styles';
 
@@ -148,8 +141,6 @@ const CardsPage = () => {
                                 </TableContainer>
 
                             </Box>}
-
-
 
                         </Wrapper>
 

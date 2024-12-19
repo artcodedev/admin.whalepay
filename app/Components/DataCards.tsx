@@ -42,7 +42,6 @@ const DataCards = ({ ...pr }: Props) => {
 
     const handleExited = () => { setMessageInfo(undefined); };
 
-
     return (
         <>
 

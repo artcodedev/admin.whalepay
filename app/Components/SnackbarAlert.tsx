@@ -1,14 +1,11 @@
 import Alert from "@mui/material/Alert";
-import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
-import { useEffect, useState } from "react";
-
+import Snackbar from "@mui/material/Snackbar";
 
 interface Props {
     open: boolean
     duration: number
     handleClose: (e: boolean) => () => void
 }
-
 
 const SnackbarAlert = ({...pr}: Props) => {
 
