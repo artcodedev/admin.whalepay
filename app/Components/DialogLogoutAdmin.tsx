@@ -13,6 +13,7 @@ interface Props {
     onClickFalseValue: boolean
     onClose: (cl: boolean) => () => void
     onClickFalse: (cl: boolean) => void
+    onClickTrue: (cl: boolean) => void
 }
 
 
@@ -34,7 +35,7 @@ const DialodLogoutAdmin = ({...pr}: Props) => {
 
                     <Button variant="contained" color='error' onClick={() => { pr.onClickFalse(pr.onClickFalseValue) }}>Нет</Button>
 
-                    <Button variant="contained" color='success' autoFocus>Да</Button>
+                    <Button variant="contained" color='success' onClick={() => { pr.onClickTrue(true) }} autoFocus>Да</Button>
 
                 </DialogActions>
 

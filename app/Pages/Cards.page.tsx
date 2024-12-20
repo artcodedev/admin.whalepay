@@ -18,7 +18,6 @@ import * as style from '@/app/Styles/styles';
 
 import DataCards from "../Components/DataCards";
 
-
 interface Column {
     label: string;
     minWidth?: number;
@@ -49,9 +48,7 @@ const columns: readonly Column[] = [
     }
 ];
 
-
 const CardsPage = () => {
-
 
     const [openDataCards, setOpenDataCards] = useState(false);
 
@@ -80,6 +77,7 @@ const CardsPage = () => {
                 <Wrapper>
 
                     <Box sx={{ maxWidth: '1400px', margin: 'auto' }}>
+
                         <Typography variant="h5" noWrap component="div" sx={style.main_title}>
                             Банковские карты
                         </Typography>
@@ -87,7 +85,6 @@ const CardsPage = () => {
                         <Wrapper>
 
                             {loading ? <Loading /> : <Box sx={{ minWidth: { lg: '100%' }, border: '1px solid #eee' }}>
-
 
                                 <TableContainer sx={{ maxHeight: 740 }}>
                                     <Table stickyHeader aria-label="sticky table">
@@ -107,7 +104,6 @@ const CardsPage = () => {
                                         </TableHead>
 
                                         <TableBody>
-
 
                                             <TableRow hover role="checkbox" tabIndex={-1}>
 

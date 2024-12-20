@@ -2,7 +2,7 @@ import Container from "@mui/material/Container";
 import Wrapper from "../Components/Wrapper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Loading from "../Components/Loading";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
@@ -15,11 +15,16 @@ import Button from "@mui/material/Button";
 import SnackbarAlert from "../Components/SnackbarAlert";
 
 import * as style from '@/app/Styles/styles';
+import { useAsyncEffect } from "use-async-effect";
+import { Fetch } from "../Utils/Fetch";
+import { useCookies } from 'react-cookie';
+import { Answer } from "../Models/Answers/AnswerModels";
 
 interface Column {
     label: string;
     minWidth?: number;
 }
+
 
 const columns: readonly Column[] = [
     {
@@ -43,30 +48,77 @@ const columns: readonly Column[] = [
 
 ];
 
+enum Currency {
+    RUB,
+    USD
+}
+
+interface Banks {
+    id: number
+    title: string
+    status: boolean
+    uid: string
+    currency: Currency
+    currencySymbol: string
+}
+
+interface ResponseBanks {
+    status: number
+    data?: Banks[]
+    message?: string
+}
+
 const Banks = () => {
 
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [token, setToken] = useCookies(['token']);
 
+    const [openError, setOpenError] = useState<boolean>(false);
 
-    const [open, setOpen] = useState<boolean>(false);
+    const handleClose = (e: boolean) => (): void => { setOpenError(e); };
 
-    const handleClose = (e: boolean) => (): void => { setOpen(e); };
+    const [banks, setBanks] = useState<Banks[]>([]);
 
-    const handleClick = (): void => { setOpen(true); };
+    const change = async (uid: string) => {
 
+        // const cha: Answer = await Fetch.request('', {uid: uid, status: });
+    }
 
+    const changeStatusBanks = (status: boolean, uid: string) => () => {
+        console.log(status);
+        console.log(uid)
+    }
 
-  
+    useAsyncEffect(async () => {
+
+        const banks_response: ResponseBanks = await Fetch.request('http://localhost:3000/api/v1/get_banks', { token: token.token });
+
+        if (banks_response.status == 200) {
+
+            if (banks_response.data) {
+
+                setBanks(banks_response.data);
+                setLoading(false);
+
+            } else { setOpenError(true); }
+        }
+
+        if (banks_response.status != 200) {
+            setOpenError(true);
+        }
+
+    }, [])
+
     return (
         <>
 
-        <SnackbarAlert open={open} duration={4000} handleClose={handleClose}/>
+            <SnackbarAlert open={openError} duration={4000} handleClose={handleClose} message="Ошибка получение данных!" />
+
+            {/* <Button onClick={handleClick}>Open Snackbar</Button> */}
 
             <Container sx={{ minWidth: { lg: '100%' } }}>
 
                 <Wrapper>
-
-                <Button onClick={handleClick}>Open Snackbar</Button>
 
                     <Box sx={{ maxWidth: '1400px', margin: 'auto' }}>
                         <Typography variant="h5" noWrap component="div" sx={style.main_title}>
@@ -86,8 +138,8 @@ const Banks = () => {
                                             <TableRow>
                                                 {columns.map((column, i) => (
                                                     <TableCell
-                                                        
-                                                        sx={i == 2 ? { textAlign: 'left', display: {xs: 'none', md: 'block'}} : { textAlign: 'left'} }
+
+                                                        sx={i == 2 ? { textAlign: 'left', display: { xs: 'none', md: 'block' } } : { textAlign: 'left' }}
                                                         style={{ minWidth: column.minWidth, textAlign: 'left' }}
                                                     >
                                                         {column.label}
@@ -98,14 +150,31 @@ const Banks = () => {
 
                                         <TableBody>
 
+                                            {banks.map((e) =>
+                                                <TableRow hover role="checkbox" tabIndex={-1}>
 
-                                            <TableRow hover role="checkbox" tabIndex={-1}>
+                                                    <TableCell sx={{ textAlign: 'left' }}>{e.title}</TableCell>
+
+                                                    <TableCell sx={{ textAlign: 'left', }}>{e.currency}</TableCell>
+
+                                                    <TableCell sx={{ textAlign: 'left', display: { xs: 'none', md: 'table-cell' } }}>
+                                                        {e.currencySymbol}
+                                                    </TableCell>
+
+                                                    <TableCell sx={{ textAlign: 'left', }}>
+                                                        <Switch defaultChecked={e.status ? true : false} color="success" onChange={changeStatusBanks(e.status, e.uid)}/>
+                                                    </TableCell>
+
+                                                </TableRow>)}
+
+
+                                            {/* <TableRow hover role="checkbox" tabIndex={-1}>
 
                                                 <TableCell sx={{ textAlign: 'left' }}>SBER</TableCell>
 
                                                 <TableCell sx={{ textAlign: 'left', }}>RUB</TableCell>
 
-                                                <TableCell sx={{ textAlign: 'left', display: {xs: 'none', md: 'table-cell'}}}>
+                                                <TableCell sx={{ textAlign: 'left', display: { xs: 'none', md: 'table-cell' } }}>
                                                     R
                                                 </TableCell>
 
@@ -113,7 +182,7 @@ const Banks = () => {
                                                     <Switch defaultChecked={false} />
                                                 </TableCell>
 
-                                            </TableRow>
+                                            </TableRow> */}
 
                                         </TableBody>
 
@@ -135,10 +204,10 @@ const Banks = () => {
             </Container>
 
 
-            
 
 
-           
+
+
         </>
     );
 }

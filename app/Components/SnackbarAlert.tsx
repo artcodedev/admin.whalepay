@@ -5,6 +5,7 @@ interface Props {
     open: boolean
     duration: number
     handleClose: (e: boolean) => () => void
+    message: string
 }
 
 const SnackbarAlert = ({...pr}: Props) => {
@@ -15,7 +16,7 @@ const SnackbarAlert = ({...pr}: Props) => {
             <Snackbar open={pr.open} autoHideDuration={pr.duration} onClose={pr.handleClose(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
 
                 <Alert onClose={pr.handleClose(false)} severity='error' variant='filled' sx={{ width: '100%' }}>
-                    Ошибка получение данных!
+                    {pr.message}
                 </Alert>
 
             </Snackbar>

@@ -6,8 +6,6 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Loading from './Loading';
 import { useRef, useState } from 'react';
-import Box from '@mui/material/Box';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Snackbar from '@mui/material/Snackbar';
 import React from 'react';
 import BoxDataTransactions from './BoxDataTransaction';

@@ -20,8 +20,18 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { Visibility } from '@material-ui/icons';
 import Loading from '@/app/Components/Loading';
 
+import { KeyboardEvent, useEffect } from 'react';
+
+import { Fetch } from '../Utils/Fetch';
+
 import { useCookies } from 'react-cookie';
 import { useRouter } from 'next/navigation';
+
+interface ResponseeAuth {
+  status: number
+  token?: string
+  message?: string
+}
 
 export default function Auth() {
 
@@ -32,27 +42,51 @@ export default function Auth() {
   const [pass, setPass] = React.useState<string>('');
   const [errorLogin, setErrorLogin] = React.useState<boolean>(false);
   const [errorPass, setErrorPass] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(true);
   const [token, setToken] = useCookies(['token']);
 
-  React.useEffect(() => {
-    // if(token) router.replace("/audit");
+  useEffect(() => {
+    if (token.token?.length) {
+      router.replace("/admin");
+    } else {
+      setLoading(false);
+    }
   })
 
   const ShowPassword = () => { setShowPassword(showPassword ? false : true) }
 
-  const sendData = () => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
 
-    const regExp: RegExp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    if (e.key === 'Enter') {sendData()}
 
-    const checkEmail: RegExpMatchArray | null = login.toLowerCase().match(regExp);
+  }
 
-    if (login.length == 0 || checkEmail == null) setErrorLogin(true);
+  const sendData = async () => {
+
+    if (login.length < 6) setErrorLogin(true);
     if (pass.length < 6) setErrorPass(true);
 
-    if (login.toLowerCase().match(regExp) && pass.length > 6) {
+    if (login.length > 6 && pass.length > 6) {
 
-      // send
+      const auth: ResponseeAuth = await Fetch.request('/api/v1/auth', { login: login, password: pass });
+
+      if (auth.status !== 200) {
+
+        setErrorLogin(true);
+        setErrorPass(true);
+
+      }
+
+      if (auth.status == 200) {
+
+        if (auth.token) {
+          setToken('token', auth.token);
+          router.replace("/admin");
+        } else {
+          router.replace("/");
+        }
+
+      }
 
     }
 
@@ -81,6 +115,8 @@ export default function Auth() {
 
                 error={errorLogin}
 
+                onKeyDown={handleKeyPress}
+
                 label="Login"
               />
 
@@ -98,6 +134,8 @@ export default function Auth() {
                 onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => { setPass(e.currentTarget.value) }}
 
                 error={errorPass}
+
+                onKeyDown={handleKeyPress}
 
                 onFocus={() => { setErrorPass(false) }}
 
@@ -123,6 +161,7 @@ export default function Auth() {
           </Box>
 
           <Box style={auth_style.auth_pole_box}>
+
             <Button style={auth_style.button} variant="contained" onClick={sendData}>ok</Button>
           </Box>
 
