@@ -14,8 +14,8 @@ import TableRow from '@mui/material/TableRow';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 
-import TransactionDataDialog from './TransactionsDataDialog';
-import TransactionChancheStatusDialog from './TransactionChangeStatusDialog';
+import TransactionDataDialog from '../Components/TransactionsDataDialog';
+import TransactionChancheStatusDialog from '../Components/TransactionChangeStatusDialog';
 
 import * as style from '@/app/Styles/styles';
 import { useState } from 'react';
