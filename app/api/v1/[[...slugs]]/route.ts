@@ -1,36 +1,13 @@
 
-import { Elysia, t } from 'elysia'
+import { Elysia } from 'elysia'
 
 /*
 *** Utils
 */
 import { Fetch } from '@/app/Utils/Fetch';
 import { Answers } from '@/app/Utils/Answers';
+import { AuthData, AuthVerifyToken, UpdateBank, UpdateCard } from '@/app/RouteModels';
 
-interface AuthData {
-    login: string
-    password: string
-}
-
-interface AuthVerifyToken {
-    token: string
-}
-
-interface UpdateBank {
-    uid: string
-    status: boolean
-    token: string
-}
-
-
-export interface UpdateCard {
-
-    token: string
-    login: string
-    status: boolean
-    busy: boolean
-    
-}
 
 const app = new Elysia({ prefix: '/api/v1' })
 
