@@ -11,19 +11,13 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import Switch from "@mui/material/Switch";
-import Button from "@mui/material/Button";
 import SnackbarAlert from "../Components/SnackbarAlert";
-
 import * as style from '@/app/Styles/styles';
 import { useAsyncEffect } from "use-async-effect";
 import { Fetch } from "../Utils/Fetch";
 import { useCookies } from 'react-cookie';
 import { Answer } from "../Models/Answers/AnswerModels";
-
-interface Column {
-    label: string;
-    minWidth?: number;
-}
+import { ResponseBanks, BanksM, Column } from "../Models/BanksPageModel";
 
 
 const columns: readonly Column[] = [
@@ -48,26 +42,6 @@ const columns: readonly Column[] = [
 
 ];
 
-enum Currency {
-    RUB,
-    USD
-}
-
-interface Banks {
-    id: number
-    title: string
-    status: boolean
-    uid: string
-    currency: Currency
-    currencySymbol: string
-}
-
-interface ResponseBanks {
-    status: number
-    data?: Banks[]
-    message?: string
-}
-
 const Banks = () => {
 
     const [loading, setLoading] = useState<boolean>(true);
@@ -77,7 +51,7 @@ const Banks = () => {
 
     const handleClose = (e: boolean) => (): void => { setOpenError(e); };
 
-    const [banks, setBanks] = useState<Banks[]>([]);
+    const [banks, setBanks] = useState<BanksM[]>([]);
 
     const getDataBanks = async () => {
 
@@ -100,11 +74,11 @@ const Banks = () => {
 
     const updateStatusBank = async (uid: string, status: boolean) => {
 
-        const cha: Answer = await Fetch.request('http://localhost:3000/api/v1/update_banks', {token: token.token, uid: uid, status: status});
+        const cha: Answer = await Fetch.request('http://localhost:3000/api/v1/update_banks', { token: token.token, uid: uid, status: status });
 
         if (cha.status == 200) { await getDataBanks(); }
 
-        if (cha.status != 200) {setOpenError(true);}
+        if (cha.status != 200) { setOpenError(true); }
     }
 
     const changeStatusBanks = (status: boolean, uid: string) => () => { updateStatusBank(uid, status); }
@@ -153,6 +127,7 @@ const Banks = () => {
                                         <TableBody>
 
                                             {banks.map((e) =>
+
                                                 <TableRow hover role="checkbox" tabIndex={-1}>
 
                                                     <TableCell sx={{ textAlign: 'left' }}>{e.title}</TableCell>

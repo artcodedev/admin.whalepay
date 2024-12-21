@@ -13,45 +13,15 @@ import Loading from "../Components/Loading";
 import { useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from '@mui/icons-material/Info';
-
 import * as style from '@/app/Styles/styles';
-
 import DataCards from "../Components/DataCards";
 import { Fetch } from "../Utils/Fetch";
 import { useCookies } from 'react-cookie';
 import SnackbarAlert from "../Components/SnackbarAlert";
 import { useAsyncEffect } from "use-async-effect";
 import { Answer } from "../Models/Answers/AnswerModels";
+import { Cards, Column, ResponseCards } from "../Models/CardsPageModel";
 
-interface Column {
-    label: string;
-    minWidth?: number;
-}
-
-interface Cards {
-    id: number
-    card_number: string
-    card_holder: string
-    card_receiver: string
-    card_cvv: string
-    card_valid_thru: string
-    card_phone: string
-    card_login: string
-    card_password: string
-    card_pin: string
-    card_secret: string
-    active: boolean
-    busy: boolean
-    balance: number
-    withdraw_avaliable: boolean
-    bank_uid: string
-}
-
-interface ResponseCards {
-    status: number
-    data?: Cards[]
-    message?: string
-}
 
 const columns: readonly Column[] = [
     {
@@ -87,6 +57,15 @@ const CardsPage = () => {
     const [cards, setCards] = useState<Cards[]>([]);
     const [login, setLogin] = useState<string>('');
     const [pass, setPass] = useState<string>('');
+
+    const formatNumber = (num: string): string => {
+        const regex = /^(\w{0,4})(\w{0,4})(\w{0,4})(\w{0,4})$/g
+        const words = num.replace(/[^\w]/g, '')
+
+        return words.replace(regex, (regex, a, b, c, d) =>
+            [a, b, c, d].filter(group => !!group).join(' ')
+        )
+    }
 
     const handleCloseDataCards = () => {
         setOpenDataCards(false);
@@ -184,7 +163,7 @@ const CardsPage = () => {
 
                                             {cards.map((e) => <TableRow hover role="checkbox" tabIndex={-1}>
 
-                                                <TableCell sx={{ textAlign: 'left' }}>{e.card_number}</TableCell>
+                                                <TableCell sx={{ textAlign: 'left' }}>{formatNumber(e.card_number)}</TableCell>
 
                                                 <TableCell sx={{ textAlign: 'left', }}>{e.balance}</TableCell>
 

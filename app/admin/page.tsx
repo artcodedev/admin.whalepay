@@ -1,10 +1,8 @@
 'use client'
 
 import * as React from 'react';
-
 import * as style from '@/app/Styles/admin.styles';
 import { useCookies } from 'react-cookie';
-
 import Container from '@mui/material/Container';
 import Wrapper from '../Components/Wrapper';
 import DrawerAdmin from '@/app/Components/DrawerAdmin';
@@ -14,13 +12,10 @@ import IndexPage from '@/app/Pages/Index.page';
 import StickyHeadTable from '@/app/Pages/Transactions.page'
 import CardsPage from '../Pages/Cards.page';
 import Banks from '../Pages/Banks.page';
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-
 import Loading from '../Components/Loading';
 import { useAsyncEffect } from 'use-async-effect';
 import { Fetch } from '../Utils/Fetch';
-import { Answers } from '../Utils/Answers';
 import { Answer } from '../Models/Answers/AnswerModels';
 
 const Admin = () => {
@@ -30,7 +25,6 @@ const Admin = () => {
   const [checkMenuItem, setCheckMenuItem] = React.useState<number | null>(null);
   const [token, setToken] = useCookies(['token']);
   const router = useRouter();
-
   const [loading, setLoading] = React.useState<boolean>(true);
 
   useAsyncEffect( async () => {
@@ -39,17 +33,11 @@ const Admin = () => {
 
       const token_varify: Answer = await Fetch.request('http://localhost:3000/api/v1/verify', {token: token.token});
 
-      console.log(token_varify)
-
       if (token_varify.status == 200) {setLoading(false)}
       
-      if (token_varify.status != 200) {
-        router.replace("/auth");
-      }
+      if (token_varify.status != 200) { router.replace("/auth"); }
 
-    } else {
-      router.replace("/auth");
-    }
+    } else { router.replace("/auth"); }
 
   }, [])
 
