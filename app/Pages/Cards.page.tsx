@@ -17,10 +17,40 @@ import InfoIcon from '@mui/icons-material/Info';
 import * as style from '@/app/Styles/styles';
 
 import DataCards from "../Components/DataCards";
+import { Fetch } from "../Utils/Fetch";
+import { useCookies } from 'react-cookie';
+import SnackbarAlert from "../Components/SnackbarAlert";
+import { useAsyncEffect } from "use-async-effect";
+import { Answer } from "../Models/Answers/AnswerModels";
 
 interface Column {
     label: string;
     minWidth?: number;
+}
+
+interface Cards {
+    id: number
+    card_number: string
+    card_holder: string
+    card_receiver: string
+    card_cvv: string
+    card_valid_thru: string
+    card_phone: string
+    card_login: string
+    card_password: string
+    card_pin: string
+    card_secret: string
+    active: boolean
+    busy: boolean
+    balance: number
+    withdraw_avaliable: boolean
+    bank_uid: string
+}
+
+interface ResponseCards {
+    status: number
+    data?: Cards[]
+    message?: string
 }
 
 const columns: readonly Column[] = [
@@ -50,27 +80,74 @@ const columns: readonly Column[] = [
 
 const CardsPage = () => {
 
-    const [openDataCards, setOpenDataCards] = useState(false);
-
-    const handleClickOpen = () => {
-        setOpenDataCards(true);
-    };
+    const [openDataCards, setOpenDataCards] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [token, setToken] = useCookies(['token']);
+    const [openError, setOpenError] = useState<boolean>(false);
+    const [cards, setCards] = useState<Cards[]>([]);
+    const [login, setLogin] = useState<string>('');
+    const [pass, setPass] = useState<string>('');
 
     const handleCloseDataCards = () => {
         setOpenDataCards(false);
     };
 
-    const [loading, setLoading] = useState<boolean>(false);
+    const handleClose = (e: boolean) => (): void => { setOpenError(e); };
 
-    const some = (st: string) => (): void => {
-
-        console.log("some")
+    const setDataCards = (login: string, pass: string) => (): void => {
+        setLogin(login);
+        setPass(pass);
+        setOpenDataCards(true);
     }
+
+    const getDataCards = async () => {
+
+        const cards_response: ResponseCards = await Fetch.request('http://localhost:3000/api/v1/get_cards', { token: token.token });
+
+        if (cards_response.status == 200) {
+
+            if (cards_response.data) {
+
+                setCards(cards_response.data);
+                setLoading(false);
+
+            } else { setOpenError(true); }
+        }
+
+        if (cards_response.status != 200) {
+            setOpenError(true);
+        }
+
+    }
+
+    const updateStatusBusyCard = async (login: string, status: boolean, busy: boolean) => {
+
+        const cha: Answer = await Fetch.request('http://localhost:3000/api/v1/update_card', { token: token.token, login: login, status: status, busy: busy });
+
+        if (cha.status == 200) { await getDataCards(); }
+
+        if (cha.status != 200) { setOpenError(true); }
+
+    }
+
+    const changeStatusBusyCard = (login: string, status: boolean, busy: boolean) => () => {
+
+        updateStatusBusyCard(login, status, busy);
+
+    }
+
+    useAsyncEffect(async () => {
+
+        await getDataCards();
+
+    }, [])
 
     return (
         <>
 
-            <DataCards onClose={handleCloseDataCards} open={openDataCards} />
+            <SnackbarAlert open={openError} duration={4000} handleClose={handleClose} message="Ошибка получение данных!" />
+
+            <DataCards onClose={handleCloseDataCards} open={openDataCards} login={login} pass={pass} />
 
             <Container sx={{ minWidth: { lg: '100%' } }}>
 
@@ -105,31 +182,39 @@ const CardsPage = () => {
 
                                         <TableBody>
 
-                                            <TableRow hover role="checkbox" tabIndex={-1}>
+                                            {cards.map((e) => <TableRow hover role="checkbox" tabIndex={-1}>
 
-                                                <TableCell sx={{ textAlign: 'left' }}>0000 0000 0000 0000</TableCell>
+                                                <TableCell sx={{ textAlign: 'left' }}>{e.card_number}</TableCell>
 
-                                                <TableCell sx={{ textAlign: 'left', }}>2500</TableCell>
+                                                <TableCell sx={{ textAlign: 'left', }}>{e.balance}</TableCell>
 
                                                 <TableCell sx={{ textAlign: 'left', }}>
-                                                    <Switch defaultChecked={false} />
+                                                    <Switch
+                                                        defaultChecked={e.active ? true : false}
+                                                        onChange={changeStatusBusyCard(e.card_login, e.active == true ? false : true, e.busy)}
+                                                    />
                                                 </TableCell>
 
                                                 <TableCell sx={{ textAlign: 'left', }}>
-                                                    <Switch defaultChecked={false} />
+                                                    <Switch
+                                                        defaultChecked={e.busy ? true : false}
+                                                        onChange={changeStatusBusyCard(e.card_login, e.active, e.busy == true ? false : true)}
+                                                    />
                                                 </TableCell>
 
                                                 <TableCell sx={{ textAlign: 'left', }}>
 
-                                                    <IconButton onClick={handleClickOpen}>
+                                                    <IconButton>
 
-                                                        <InfoIcon color={'info'} onClick={some('000000000')} />
+                                                        <InfoIcon color={'info'} onClick={setDataCards(e.card_login, e.card_password)} />
 
                                                     </IconButton>
 
                                                 </TableCell>
 
                                             </TableRow>
+
+                                            )}
 
                                         </TableBody>
 
@@ -141,7 +226,6 @@ const CardsPage = () => {
                         </Wrapper>
 
                     </Box>
-
 
                 </Wrapper>
             </Container>

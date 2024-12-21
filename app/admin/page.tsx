@@ -39,6 +39,8 @@ const Admin = () => {
 
       const token_varify: Answer = await Fetch.request('http://localhost:3000/api/v1/verify', {token: token.token});
 
+      console.log(token_varify)
+
       if (token_varify.status == 200) {setLoading(false)}
       
       if (token_varify.status != 200) {

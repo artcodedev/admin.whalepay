@@ -12,6 +12,8 @@ import BoxDataTransactions from './BoxDataTransaction';
 
 interface Props {
     open: boolean
+    login: string
+    pass: string
     onClose: () => void
 }
 
@@ -19,8 +21,6 @@ export interface SnackbarMessage {
     message: string;
     key: number;
 }
-
-const contentCopyIcon = { fontSize: '14px', marginLeft: '10px', cursor: 'pointer' }
 
 const DataCards = ({ ...pr }: Props) => {
 
@@ -55,9 +55,9 @@ const DataCards = ({ ...pr }: Props) => {
 
                         {loading ? <Loading /> : <>
 
-                            <BoxDataTransactions type="Логин" data='qdwq@.asdm' />
+                            <BoxDataTransactions type="Логин" data={pr.login} />
 
-                            <BoxDataTransactions type="Пароль" data='12313132131' />
+                            <BoxDataTransactions type="Пароль" data={pr.pass} />
 
                         </>
                         }

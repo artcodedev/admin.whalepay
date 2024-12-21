@@ -2,7 +2,7 @@ import Container from "@mui/material/Container";
 import Wrapper from "../Components/Wrapper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import Loading from "../Components/Loading";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
@@ -79,17 +79,7 @@ const Banks = () => {
 
     const [banks, setBanks] = useState<Banks[]>([]);
 
-    const change = async (uid: string) => {
-
-        // const cha: Answer = await Fetch.request('', {uid: uid, status: });
-    }
-
-    const changeStatusBanks = (status: boolean, uid: string) => () => {
-        console.log(status);
-        console.log(uid)
-    }
-
-    useAsyncEffect(async () => {
+    const getDataBanks = async () => {
 
         const banks_response: ResponseBanks = await Fetch.request('http://localhost:3000/api/v1/get_banks', { token: token.token });
 
@@ -106,6 +96,22 @@ const Banks = () => {
         if (banks_response.status != 200) {
             setOpenError(true);
         }
+    }
+
+    const updateStatusBank = async (uid: string, status: boolean) => {
+
+        const cha: Answer = await Fetch.request('http://localhost:3000/api/v1/update_banks', {token: token.token, uid: uid, status: status});
+
+        if (cha.status == 200) { await getDataBanks(); }
+
+        if (cha.status != 200) {setOpenError(true);}
+    }
+
+    const changeStatusBanks = (status: boolean, uid: string) => () => { updateStatusBank(uid, status); }
+
+    useAsyncEffect(async () => {
+
+        await getDataBanks();
 
     }, [])
 
@@ -113,8 +119,6 @@ const Banks = () => {
         <>
 
             <SnackbarAlert open={openError} duration={4000} handleClose={handleClose} message="Ошибка получение данных!" />
-
-            {/* <Button onClick={handleClick}>Open Snackbar</Button> */}
 
             <Container sx={{ minWidth: { lg: '100%' } }}>
 
@@ -129,10 +133,8 @@ const Banks = () => {
 
                             {loading ? <Loading /> : <Box sx={{ minWidth: { lg: '100%' }, border: '1px solid #eee' }}>
 
-
                                 <TableContainer sx={{ maxHeight: 740 }}>
                                     <Table stickyHeader aria-label="sticky table">
-
 
                                         <TableHead>
                                             <TableRow>
@@ -162,27 +164,10 @@ const Banks = () => {
                                                     </TableCell>
 
                                                     <TableCell sx={{ textAlign: 'left', }}>
-                                                        <Switch defaultChecked={e.status ? true : false} color="success" onChange={changeStatusBanks(e.status, e.uid)}/>
+                                                        <Switch defaultChecked={e.status ? true : false} color="success" onChange={changeStatusBanks(e.status, e.uid)} />
                                                     </TableCell>
 
                                                 </TableRow>)}
-
-
-                                            {/* <TableRow hover role="checkbox" tabIndex={-1}>
-
-                                                <TableCell sx={{ textAlign: 'left' }}>SBER</TableCell>
-
-                                                <TableCell sx={{ textAlign: 'left', }}>RUB</TableCell>
-
-                                                <TableCell sx={{ textAlign: 'left', display: { xs: 'none', md: 'table-cell' } }}>
-                                                    R
-                                                </TableCell>
-
-                                                <TableCell sx={{ textAlign: 'left', }}>
-                                                    <Switch defaultChecked={false} />
-                                                </TableCell>
-
-                                            </TableRow> */}
 
                                         </TableBody>
 
@@ -190,23 +175,14 @@ const Banks = () => {
                                 </TableContainer>
                             </Box>
 
-
                             }
-
-
 
                         </Wrapper>
 
                     </Box>
 
-
                 </Wrapper>
             </Container>
-
-
-
-
-
 
         </>
     );
