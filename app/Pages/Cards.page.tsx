@@ -183,9 +183,9 @@ const CardsPage = () => {
 
                                                 <TableCell sx={{ textAlign: 'left', }}>
 
-                                                    <IconButton>
+                                                    <IconButton onClick={setDataCards(e.card_login, e.card_password)} >
 
-                                                        <InfoIcon color={'info'} onClick={setDataCards(e.card_login, e.card_password)} />
+                                                        <InfoIcon color={'info'} />
 
                                                     </IconButton>
 

@@ -16,8 +16,6 @@ const BoxDataTransactions = ({ ...pr }: BoxData) => {
 
     const [snackbar, setSnackbar] = useState<boolean>(false);
     const [typeSnackbar, setTypeSnackbar] = useState<string>('');
-
-    const contentCopyIcon = { fontSize: '14px', marginLeft: '10px', cursor: 'pointer' }
     const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(undefined);
 
     const handleClose = () => { setSnackbar(false); }
@@ -30,7 +28,6 @@ const BoxDataTransactions = ({ ...pr }: BoxData) => {
 
     const handleExited = () => { setMessageInfo(undefined); };
 
-
     return (
         <>
             <Snackbar
@@ -40,11 +37,14 @@ const BoxDataTransactions = ({ ...pr }: BoxData) => {
                 onClose={handleClose}
                 message={`${typeSnackbar} скопирован!`}
             />
-            <Box sx={{marginTop: '7px'}}>
+            <Box sx={{ marginTop: '7px' }}>
 
                 {pr.type}:&nbsp;<span style={{ color: '#000' }}>{pr.data}</span>
 
-                <ContentCopyIcon onClick={copyData(pr.type, pr.data ? pr.data : '')} sx={contentCopyIcon} />
+                <ContentCopyIcon
+                    onClick={copyData(pr.type, pr.data ? pr.data : '')}
+                    sx={{ fontSize: '14px', marginLeft: '10px', cursor: 'pointer' }}
+                />
 
             </Box>
         </>
