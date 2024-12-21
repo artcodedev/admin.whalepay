@@ -70,6 +70,26 @@ const app = new Elysia({ prefix: '/api/v1' })
 
     })
 
+
+    /*
+    *** Get all transactions
+    */
+    .post('/get_transactions', async ({body}: {body: AuthVerifyToken }): Promise<Answers> => {
+
+        return await Fetch.request(`http://localhost:5000/api/admin/get_transactions`, body);
+
+    })
+
+
+    /*
+    *** Update transaction
+    */
+    .post('/update_transaction', async ({body}: {body: AuthVerifyToken }): Promise<Answers> => {
+
+        return await Fetch.request(`http://localhost:5000/api/admin/update_transaction`, body);
+
+    })
+
     
 
 export const GET = app.handle

@@ -116,7 +116,7 @@ const Banks = () => {
                                                     <TableCell
 
                                                         sx={i == 2 ? { textAlign: 'left', display: { xs: 'none', md: 'block' } } : { textAlign: 'left' }}
-                                                        style={{ minWidth: column.minWidth, textAlign: 'left' }}
+                                                        style={{ minWidth: column.minWidth, textAlign: 'left', fontWeight: 'bold' }}
                                                     >
                                                         {column.label}
                                                     </TableCell>

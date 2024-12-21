@@ -151,7 +151,7 @@ const CardsPage = () => {
                                                 {columns.map((column, i) => (
                                                     <TableCell
                                                         sx={{ textAlign: 'left', }}
-                                                        style={{ minWidth: column.minWidth, textAlign: 'left' }}
+                                                        style={{ minWidth: column.minWidth, textAlign: 'left', fontWeight: 'bold'}}
                                                     >
                                                         {column.label}
                                                     </TableCell>

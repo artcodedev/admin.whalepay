@@ -1,13 +1,24 @@
+
+export enum Status {
+    PROCESS,
+    PENDING_PAY,
+    PENDING_CARD,
+    PENDING_TRX,
+    SUCCESS,
+    ERROR,
+    EXITED,
+    REQVER,
+}
+
 export interface RequestDataTransactions {
     status: string
     sum: number
     domein: string
-    id_client: string
-    time: string
-    number_card: number
+    uid_session: string
+    time: number
+    number_card: string
     login: string
     password: string
-    uid: string
 }
 
 export interface Data {
@@ -23,4 +34,11 @@ export interface Column {
     label: string;
     minWidth?: number;
     maxWidth: number
+}
+
+export interface ResponseTransactions {
+
+    status: number
+    data: RequestDataTransactions[]
+
 }

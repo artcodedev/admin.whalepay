@@ -13,14 +13,18 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
-
+import { useCookies } from 'react-cookie';
 import TransactionDataDialog from '../Components/TransactionsDataDialog';
 import TransactionChancheStatusDialog from '../Components/TransactionChangeStatusDialog';
-
+import { useAsyncEffect } from "use-async-effect";
 import * as style from '@/app/Styles/styles';
 import { useState } from 'react';
-import { Column, Data, RequestDataTransactions } from '../Models/Transactions';
+import { Column, Data, RequestDataTransactions, ResponseTransactions, Status } from '../Models/Transactions';
 import Chip from '@mui/material/Chip';
+import { Fetch } from '../Utils/Fetch';
+import SnackbarAlert from '../Components/SnackbarAlert';
+
+
 
 
 
@@ -36,8 +40,8 @@ const columns: readonly Column[] = [
         maxWidth: 100
     },
     {
-        id: 'id_client',
-        label: 'ID Клиента',
+        id: 'uid_session',
+        label: 'UID Сессии',
         minWidth: 50,
         maxWidth: 100
     },
@@ -56,49 +60,25 @@ const columns: readonly Column[] = [
 ];
 
 
-const createData = (name: string, code: string, population: number, size: number): Data => {
-    const density = population / size;
-    return { name, code, population, size, density };
-}
-
-const rows: RequestDataTransactions[] = [
-    {
-        status: 'REQVER',
-        sum: 2500,
-        domein: 'some.com.ru',
-        id_client: '1121212',
-        time: '12.10.11',
-        number_card: 21821387158,
-        login: 'pisunlogin',
-        password: 'pinunpass',
-        uid: '1111111'
-
-    },
-    {
-        status: 'SUCCESS',
-        sum: 2500,
-        domein: 'some.com.ru',
-        id_client: '1121212',
-        time: '12.10.11',
-        number_card: 21821387158,
-        login: 'pisunlogin',
-        password: 'pinunpass',
-        uid: '2222222'
-
-    },
-
-]
-
 const TransactionsPage = () => {
 
+    const [token, setToken] = useCookies(['token']);
+    const [loading, setLoading] = useState<boolean>(true);
     const [openDataTransaction, setOpenDataTransaction] = useState<boolean>(false);
     const [requestDataTransactions, setRequestDataTransactions] = useState<RequestDataTransactions | null>(null);
 
     const [openTransactionChancheStatusDialog, setTransactionChancheStatusDialog] = useState<boolean>(false);
-    const [uidChange, setUidChanche] = useState<string | null>(null);
+    const [uidChange, setUidChanche] = useState<string>('');
+
+    const [transactions, setTransactions] = useState<RequestDataTransactions[]>([]);
+    const [openError, setOpenError] = useState<boolean>(false);
+
+    const [timer, setTimer] = useState<boolean>(false);
 
     const sx_style = { textAlign: 'left', display: { xs: 'none', md: 'table-cell' } };
     const sx_st_left = { textAlign: 'left' };
+
+    const handleClose = (e: boolean) => (): void => { setOpenError(e); };
 
     const handleCloseTransactionChancheStatusDialog = (): void => {
         setTransactionChancheStatusDialog(false);
@@ -114,8 +94,26 @@ const TransactionsPage = () => {
     }
 
     const changeStatusRequest = () => {
-        console.log(uidChange);
+        
         setTransactionChancheStatusDialog(false);
+        
+        updateStatus(uidChange)
+    }
+
+    const updateStatus = async (uid: string) => {
+
+        console.log("UPDATE")
+        console.log(uid)
+        const update_transacrtions: ResponseTransactions = await Fetch.request('http://localhost:3000/api/v1/update_transaction', { token: token.token, uid: uid });
+
+        console.log(update_transacrtions)
+        if (update_transacrtions.status == 200) {
+            await getDataTransactions();
+        }
+
+        if (update_transacrtions.status != 200) {
+            setOpenError(true);
+        }
     }
 
     const changeStatus = (e: string, uid: string) => () => {
@@ -124,13 +122,46 @@ const TransactionsPage = () => {
             setUidChanche(uid);
             setTransactionChancheStatusDialog(true);
         }
+    }
+    /*
+    *** Time sleep in miliseconds
+    */
+    const sleep = async (ms: number): Promise<void> => { return new Promise((resolve) => setTimeout(resolve, ms)); }
+
+
+    const getDataTransactions = async () => {
+
+        const transacrtions_response: ResponseTransactions = await Fetch.request('http://localhost:3000/api/v1/get_transactions', { token: token.token });
+
+        if (transacrtions_response.status == 200) {
+
+            if (transacrtions_response.data) {
+
+                setTransactions(transacrtions_response.data);
+                setLoading(false);
+
+            } else { setOpenError(true); }
+        }
+
+        if (transacrtions_response.status != 200) {
+            setOpenError(true);
+        }
 
     }
+
+    useAsyncEffect(async () => {
+
+        await getDataTransactions();
+
+    }, [])
 
 
     return (
         <>
-            <TransactionChancheStatusDialog onClose={handleCloseTransactionChancheStatusDialog} open={openTransactionChancheStatusDialog} onOk={changeStatusRequest}/>
+
+            <SnackbarAlert open={openError} duration={4000} handleClose={handleClose} message="Ошибка получение данных!" />
+
+            <TransactionChancheStatusDialog onClose={handleCloseTransactionChancheStatusDialog} open={openTransactionChancheStatusDialog} onOk={changeStatusRequest} />
 
             <TransactionDataDialog onClose={handleCloseDataTransaction} open={openDataTransaction} transactions={requestDataTransactions} />
 
@@ -156,7 +187,7 @@ const TransactionsPage = () => {
                                                         <TableCell
                                                             sx={[2, 3, 4].includes(i) ? sx_style : sx_st_left}
                                                             key={column.id}
-                                                            style={{ minWidth: column.minWidth, textAlign: 'left' }}
+                                                            style={{ minWidth: column.minWidth, textAlign: 'left', fontWeight: 'bold' }}
                                                         >
                                                             {column.label}
                                                         </TableCell>
@@ -166,25 +197,27 @@ const TransactionsPage = () => {
 
                                             <TableBody>
 
-                                                {rows.map((e) =>
+                                                {transactions.map((e) =>
                                                     <TableRow hover role="checkbox" tabIndex={-1} >
 
                                                         <TableCell sx={sx_st_left}>
 
                                                             <Chip
 
-                                                                onClick={changeStatus(e.status, e.uid)}
+                                                                onClick={changeStatus(e.status, e.uid_session)}
 
                                                                 clickable
                                                                 label={e.status}
 
                                                                 color={
 
-                                                                    e.status === 'ERROR' ? 'error' :
-                                                                        e.status === 'REQVER' ? 'secondary' :
-                                                                            e.status === 'TIMEEND' ? 'info' :
-                                                                                e.status === 'SUCCESS' ? 'success' :
-                                                                                    e.status === 'PENDING' ? 'warning' : 'error'
+                                                                    e.status === 'REQVER' ? 'secondary' :
+                                                                        e.status === 'EXITED' ? 'info' :
+                                                                            e.status === 'SUCCESS' ? 'success' :
+                                                                                e.status === 'PROCESS' ? 'warning' :
+                                                                                    e.status === 'PENDING_PAY' ? 'warning' :
+                                                                                        e.status === 'PENDING_CARD' ? 'warning' :
+                                                                                            e.status === 'PENDING_TRX' ? 'warning' : 'error'
 
                                                                 }
 
@@ -196,7 +229,7 @@ const TransactionsPage = () => {
 
                                                         <TableCell sx={sx_style}>{e.domein}</TableCell>
 
-                                                        <TableCell sx={sx_style}>{e.id_client}</TableCell>
+                                                        <TableCell sx={sx_style}>{e.uid_session}</TableCell>
 
                                                         <TableCell sx={sx_style}>{e.time}</TableCell>
 
