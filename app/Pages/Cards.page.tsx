@@ -20,6 +20,8 @@ import { useCookies } from 'react-cookie';
 import SnackbarAlert from "../Components/SnackbarAlert";
 import { Answer } from "../Models/Answers/AnswerModels";
 import { Cards, Column, ResponseCards } from "../Models/CardsPageModel";
+import ToggleButton from "@mui/material/ToggleButton";
+import CheckIcon from '@mui/icons-material/Check';
 
 
 const columns: readonly Column[] = [
@@ -86,6 +88,8 @@ const CardsPage = () => {
 
             if (cards_response.data) {
 
+                console.log(cards_response.data);
+
                 setCards(cards_response.data);
                 setLoading(false);
 
@@ -102,6 +106,8 @@ const CardsPage = () => {
 
         const cha: Answer = await Fetch.request('http://localhost:3000/api/v1/update_card', { token: token.token, login: login, status: status, busy: busy });
 
+        if (cha.status == 200) { await getDataCards(); }
+
         if (cha.status != 200) { setOpenError(true); }
 
     }
@@ -114,7 +120,7 @@ const CardsPage = () => {
 
     useEffect(() => {
 
-       getDataCards();
+        getDataCards();
 
         let timer_id = setInterval(() => {
 
@@ -150,14 +156,13 @@ const CardsPage = () => {
                                 <TableContainer sx={{ maxHeight: 740 }}>
                                     <Table stickyHeader aria-label="sticky table">
 
-
                                         <TableHead>
                                             <TableRow>
                                                 {columns.map((column) => (
                                                     <TableCell
-                                                    key={''}
+                                                        key={''}
                                                         sx={{ textAlign: 'left' }}
-                                                        style={{ minWidth: column.minWidth, textAlign: 'left', fontWeight: 'bold'}}
+                                                        style={{ minWidth: column.minWidth, textAlign: 'left', fontWeight: 'bold' }}
                                                     >
                                                         {column.label}
                                                     </TableCell>
@@ -174,17 +179,26 @@ const CardsPage = () => {
                                                 <TableCell sx={{ textAlign: 'left', }}>{e.balance}</TableCell>
 
                                                 <TableCell sx={{ textAlign: 'left', }}>
-                                                    <Switch
-                                                        defaultChecked={e.active ? true : false}
-                                                        onChange={changeStatusBusyCard(e.card_login, e.active == true ? false : true, e.busy)}
-                                                    />
+
+                                                    {e.active ? <Switch
+                                                        checked={true}
+                                                        onChange={changeStatusBusyCard(e.card_login, !e.active, e.busy)}
+                                                    /> : <Switch
+                                                        checked={false}
+                                                        onChange={changeStatusBusyCard(e.card_login, !e.active, e.busy)}
+                                                    />}
+
                                                 </TableCell>
 
                                                 <TableCell sx={{ textAlign: 'left', }}>
-                                                    <Switch
-                                                        defaultChecked={e.busy ? true : false}
-                                                        onChange={changeStatusBusyCard(e.card_login, e.active, e.busy == true ? false : true)}
-                                                    />
+
+                                                    {e.busy ? <Switch
+                                                        checked={true}
+                                                        onChange={changeStatusBusyCard(e.card_login, e.active, !e.busy)}
+                                                    /> : <Switch
+                                                        checked={false}
+                                                        onChange={changeStatusBusyCard(e.card_login, e.active, !e.busy)}
+                                                    />}
                                                 </TableCell>
 
                                                 <TableCell sx={{ textAlign: 'left', }}>

@@ -155,8 +155,6 @@ const TransactionsPage = () => {
     return (
         <>
 
-
-
             <SnackbarAlert open={openError} duration={4000} handleClose={handleClose} message="Ошибка получение данных!" />
 
             <TransactionChancheStatusDialog onClose={handleCloseTransactionChancheStatusDialog} open={openTransactionChancheStatusDialog} onOk={changeStatusRequest} />
