@@ -1,9 +1,12 @@
 
+
+'use client'
+
 import Container from '@mui/material/Container';
 import Wrapper from '../Components/Wrapper';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -16,15 +19,13 @@ import InfoIcon from '@mui/icons-material/Info';
 import { useCookies } from 'react-cookie';
 import TransactionDataDialog from '../Components/TransactionsDataDialog';
 import TransactionChancheStatusDialog from '../Components/TransactionChangeStatusDialog';
-import { useAsyncEffect } from "use-async-effect";
 import * as style from '@/app/Styles/styles';
 import { useState } from 'react';
-import { Column, Data, RequestDataTransactions, ResponseTransactions, Status } from '../Models/Transactions';
+import { Column, RequestDataTransactions, ResponseTransactions } from '../Models/Transactions';
 import Chip from '@mui/material/Chip';
 import { Fetch } from '../Utils/Fetch';
 import SnackbarAlert from '../Components/SnackbarAlert';
-
-
+import Loading from '../Components/Loading';
 
 
 
@@ -62,7 +63,7 @@ const columns: readonly Column[] = [
 
 const TransactionsPage = () => {
 
-    const [token, setToken] = useCookies(['token']);
+    const [token,] = useCookies(['token']);
     const [loading, setLoading] = useState<boolean>(true);
     const [openDataTransaction, setOpenDataTransaction] = useState<boolean>(false);
     const [requestDataTransactions, setRequestDataTransactions] = useState<RequestDataTransactions | null>(null);
@@ -72,8 +73,6 @@ const TransactionsPage = () => {
 
     const [transactions, setTransactions] = useState<RequestDataTransactions[]>([]);
     const [openError, setOpenError] = useState<boolean>(false);
-
-    const [timer, setTimer] = useState<boolean>(false);
 
     const sx_style = { textAlign: 'left', display: { xs: 'none', md: 'table-cell' } };
     const sx_st_left = { textAlign: 'left' };
@@ -94,22 +93,15 @@ const TransactionsPage = () => {
     }
 
     const changeStatusRequest = () => {
-        
+
         setTransactionChancheStatusDialog(false);
-        
+
         updateStatus(uidChange)
     }
 
     const updateStatus = async (uid: string) => {
 
-        console.log("UPDATE")
-        console.log(uid)
         const update_transacrtions: ResponseTransactions = await Fetch.request('http://localhost:3000/api/v1/update_transaction', { token: token.token, uid: uid });
-
-        console.log(update_transacrtions)
-        if (update_transacrtions.status == 200) {
-            await getDataTransactions();
-        }
 
         if (update_transacrtions.status != 200) {
             setOpenError(true);
@@ -123,13 +115,10 @@ const TransactionsPage = () => {
             setTransactionChancheStatusDialog(true);
         }
     }
-    /*
-    *** Time sleep in miliseconds
-    */
-    const sleep = async (ms: number): Promise<void> => { return new Promise((resolve) => setTimeout(resolve, ms)); }
-
 
     const getDataTransactions = async () => {
+
+        console.log(1)
 
         const transacrtions_response: ResponseTransactions = await Fetch.request('http://localhost:3000/api/v1/get_transactions', { token: token.token });
 
@@ -149,15 +138,24 @@ const TransactionsPage = () => {
 
     }
 
-    useAsyncEffect(async () => {
+    useEffect(() => {
 
-        await getDataTransactions();
+        getDataTransactions();
 
-    }, [])
+        let timer_id = setInterval(() => {
 
+            getDataTransactions();
+
+        }, 3000);
+
+        return () => clearInterval(timer_id);
+
+    }, []);
 
     return (
         <>
+
+
 
             <SnackbarAlert open={openError} duration={4000} handleClose={handleClose} message="Ошибка получение данных!" />
 
@@ -175,7 +173,7 @@ const TransactionsPage = () => {
 
                         <Wrapper>
 
-                            <Box sx={{ minWidth: { lg: '100%' }, border: '1px solid #eee' }}>
+                            {loading ? <Loading /> : <Box sx={{ minWidth: { lg: '100%' }, border: '1px solid #eee' }}>
 
                                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                                     <TableContainer sx={{ maxHeight: 740 }}>
@@ -198,9 +196,9 @@ const TransactionsPage = () => {
                                             <TableBody>
 
                                                 {transactions.map((e) =>
-                                                    <TableRow hover role="checkbox" tabIndex={-1} >
+                                                    <TableRow hover role="checkbox" tabIndex={-1} key={''}>
 
-                                                        <TableCell sx={sx_st_left}>
+                                                        <TableCell sx={sx_st_left} key={''}>
 
                                                             <Chip
 
@@ -218,7 +216,6 @@ const TransactionsPage = () => {
                                                                                     e.status === 'PENDING_PAY' ? 'warning' :
                                                                                         e.status === 'PENDING_CARD' ? 'warning' :
                                                                                             e.status === 'PENDING_TRX' ? 'warning' : 'error'
-
                                                                 }
 
                                                             />
@@ -231,7 +228,7 @@ const TransactionsPage = () => {
 
                                                         <TableCell sx={sx_style}>{e.uid_session}</TableCell>
 
-                                                        <TableCell sx={sx_style}>{e.time}</TableCell>
+                                                        <TableCell sx={sx_style}>{new Date(Number(e.time)).toLocaleString('ru-RU', { hour12: false })}</TableCell>
 
                                                         <TableCell sx={sx_st_left}>
                                                             <IconButton >
@@ -250,13 +247,15 @@ const TransactionsPage = () => {
 
                                 </Paper>
 
-                            </Box>
+                            </Box>}
 
                         </Wrapper>
                     </Box>
 
                 </Wrapper>
             </Container>
+
+
         </>
     );
 }

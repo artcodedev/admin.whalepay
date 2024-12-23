@@ -4,7 +4,7 @@
 
 export class Fetch {
 
-    public static async request( path: string, json: Object = {}, method: string = "POST") {
+    public static async request( path: string, json: object = {}, method: string = "POST") {
 
         const response = await fetch(`${path}`, {
 

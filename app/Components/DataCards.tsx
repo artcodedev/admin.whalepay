@@ -26,10 +26,10 @@ const DataCards = ({ ...pr }: Props) => {
 
     const descriptionElementRef = useRef<HTMLElement>(null);
 
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, ] = useState<boolean>(false);
     const [snackbar, setSnackbar] = useState<boolean>(false);
-    const [typeSnackbar, setTypeSnackbar] = useState<string>('');
-    const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(undefined);
+    const [typeSnackbar, ] = useState<string>('');
+    const [, setMessageInfo] = useState<SnackbarMessage | undefined>(undefined);
 
     const handleClose = () => { setSnackbar(false); }
 

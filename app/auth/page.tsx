@@ -51,7 +51,7 @@ export default function Auth() {
     } else {
       setLoading(false);
     }
-  })
+  }, [token])
 
   const ShowPassword = () => { setShowPassword(showPassword ? false : true) }
 

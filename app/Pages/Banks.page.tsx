@@ -2,7 +2,7 @@ import Container from "@mui/material/Container";
 import Wrapper from "../Components/Wrapper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../Components/Loading";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
@@ -13,7 +13,6 @@ import TableBody from "@mui/material/TableBody";
 import Switch from "@mui/material/Switch";
 import SnackbarAlert from "../Components/SnackbarAlert";
 import * as style from '@/app/Styles/styles';
-import { useAsyncEffect } from "use-async-effect";
 import { Fetch } from "../Utils/Fetch";
 import { useCookies } from 'react-cookie';
 import { Answer } from "../Models/Answers/AnswerModels";
@@ -45,7 +44,7 @@ const columns: readonly Column[] = [
 const Banks = () => {
 
     const [loading, setLoading] = useState<boolean>(true);
-    const [token, setToken] = useCookies(['token']);
+    const [token,] = useCookies(['token']);
 
     const [openError, setOpenError] = useState<boolean>(false);
 
@@ -76,16 +75,22 @@ const Banks = () => {
 
         const cha: Answer = await Fetch.request('http://localhost:3000/api/v1/update_banks', { token: token.token, uid: uid, status: status });
 
-        if (cha.status == 200) { await getDataBanks(); }
-
         if (cha.status != 200) { setOpenError(true); }
     }
 
     const changeStatusBanks = (status: boolean, uid: string) => () => { updateStatusBank(uid, status); }
 
-    useAsyncEffect(async () => {
+    useEffect(() => {
 
-        await getDataBanks();
+        getDataBanks();
+
+        let timer_id = setInterval(() => {
+
+            getDataBanks();
+
+        }, 3000);
+
+        return () => clearInterval(timer_id);
 
     }, [])
 
@@ -114,6 +119,7 @@ const Banks = () => {
                                             <TableRow>
                                                 {columns.map((column, i) => (
                                                     <TableCell
+                                                        key={''}
 
                                                         sx={i == 2 ? { textAlign: 'left', display: { xs: 'none', md: 'block' } } : { textAlign: 'left' }}
                                                         style={{ minWidth: column.minWidth, textAlign: 'left', fontWeight: 'bold' }}
@@ -128,7 +134,7 @@ const Banks = () => {
 
                                             {banks.map((e) =>
 
-                                                <TableRow hover role="checkbox" tabIndex={-1}>
+                                                <TableRow hover role="checkbox" tabIndex={-1} key={''}>
 
                                                     <TableCell sx={{ textAlign: 'left' }}>{e.title}</TableCell>
 

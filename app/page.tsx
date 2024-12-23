@@ -2,10 +2,10 @@
 
 import * as React from 'react';
 
-import Wrapper from '@/app/Components/Wrapper';
+// import Wrapper from '@/app/Components/Wrapper';
 
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+// import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 

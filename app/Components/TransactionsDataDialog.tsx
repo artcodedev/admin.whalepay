@@ -16,7 +16,7 @@ interface Props {
     transactions: RequestDataTransactions | null
 }
 
-const TransactionDataDialog = ({ ...pr }: Props) => {
+const TransactionDataDialog = ({ ...pr }: Props) => {   
 
     const descriptionElementRef: RefObject<HTMLElement | null> = useRef<HTMLElement>(null);
 
@@ -41,18 +41,18 @@ const TransactionDataDialog = ({ ...pr }: Props) => {
                             <BoxDataTransactions type="Домен" data={pr.transactions?.domein} />
                         </Box>
                         <Box sx={sx_tr}>
-                            <BoxDataTransactions type="ID Клиента" data={pr.transactions?.id_client} />
+                            <BoxDataTransactions type="UID Сессии" data={pr.transactions?.uid_session} />
                         </Box>
 
                         <Box sx={sx_tr}>
-                            <BoxDataTransactions type="Время" data={pr.transactions?.time} />
+                            <BoxDataTransactions type="Время" data={  pr.transactions?.time ? new Date(Number(pr.transactions.time)).toLocaleString('ru-RU', { hour12: false }) : undefined  } />
                         </Box>
 
-                        <BoxDataTransactions type="Номер карты" data={pr.transactions?.number_card.toString()} />
+                        <BoxDataTransactions type="Номер карты" data={pr.transactions?.number_card.toString() || 'не назначено.'} />
 
-                        <BoxDataTransactions type="Логин" data={pr.transactions?.login} />
+                        <BoxDataTransactions type="Логин" data={pr.transactions?.login || 'не назначено.' } />
 
-                        <BoxDataTransactions type="Пароль" data={pr.transactions?.password} />
+                        <BoxDataTransactions type="Пароль" data={pr.transactions?.password || 'не назначено.'} />
 
                     </DialogContentText>
                 </DialogContent>

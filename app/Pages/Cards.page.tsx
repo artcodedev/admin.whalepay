@@ -10,7 +10,7 @@ import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
 import Switch from "@mui/material/Switch";
 import Loading from "../Components/Loading";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from '@mui/icons-material/Info';
 import * as style from '@/app/Styles/styles';
@@ -18,7 +18,6 @@ import DataCards from "../Components/DataCards";
 import { Fetch } from "../Utils/Fetch";
 import { useCookies } from 'react-cookie';
 import SnackbarAlert from "../Components/SnackbarAlert";
-import { useAsyncEffect } from "use-async-effect";
 import { Answer } from "../Models/Answers/AnswerModels";
 import { Cards, Column, ResponseCards } from "../Models/CardsPageModel";
 
@@ -51,8 +50,8 @@ const columns: readonly Column[] = [
 const CardsPage = () => {
 
     const [openDataCards, setOpenDataCards] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [token, setToken] = useCookies(['token']);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [token,] = useCookies(['token']);
     const [openError, setOpenError] = useState<boolean>(false);
     const [cards, setCards] = useState<Cards[]>([]);
     const [login, setLogin] = useState<string>('');
@@ -103,8 +102,6 @@ const CardsPage = () => {
 
         const cha: Answer = await Fetch.request('http://localhost:3000/api/v1/update_card', { token: token.token, login: login, status: status, busy: busy });
 
-        if (cha.status == 200) { await getDataCards(); }
-
         if (cha.status != 200) { setOpenError(true); }
 
     }
@@ -115,9 +112,17 @@ const CardsPage = () => {
 
     }
 
-    useAsyncEffect(async () => {
+    useEffect(() => {
 
-        await getDataCards();
+       getDataCards();
+
+        let timer_id = setInterval(() => {
+
+            getDataCards();
+
+        }, 3000);
+
+        return () => clearInterval(timer_id);
 
     }, [])
 
@@ -148,9 +153,10 @@ const CardsPage = () => {
 
                                         <TableHead>
                                             <TableRow>
-                                                {columns.map((column, i) => (
+                                                {columns.map((column) => (
                                                     <TableCell
-                                                        sx={{ textAlign: 'left', }}
+                                                    key={''}
+                                                        sx={{ textAlign: 'left' }}
                                                         style={{ minWidth: column.minWidth, textAlign: 'left', fontWeight: 'bold'}}
                                                     >
                                                         {column.label}
@@ -161,7 +167,7 @@ const CardsPage = () => {
 
                                         <TableBody>
 
-                                            {cards.map((e) => <TableRow hover role="checkbox" tabIndex={-1}>
+                                            {cards.map((e) => <TableRow hover role="checkbox" tabIndex={-1} key={''}>
 
                                                 <TableCell sx={{ textAlign: 'left' }}>{formatNumber(e.card_number)}</TableCell>
 

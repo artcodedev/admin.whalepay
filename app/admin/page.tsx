@@ -18,6 +18,7 @@ import { useAsyncEffect } from 'use-async-effect';
 import { Fetch } from '../Utils/Fetch';
 import { Answer } from '../Models/Answers/AnswerModels';
 
+
 const Admin = () => {
 
   const [openLogOut, setOpenLogOut] = React.useState(false);
@@ -27,14 +28,14 @@ const Admin = () => {
   const router = useRouter();
   const [loading, setLoading] = React.useState<boolean>(true);
 
-  useAsyncEffect( async () => {
+  useAsyncEffect(async () => {
 
     if (token.token?.length) {
 
-      const token_varify: Answer = await Fetch.request('http://localhost:3000/api/v1/verify', {token: token.token});
+      const token_varify: Answer = await Fetch.request('http://localhost:3000/api/v1/verify', { token: token.token });
 
-      if (token_varify.status == 200) {setLoading(false)}
-      
+      if (token_varify.status == 200) { setLoading(false) }
+
       if (token_varify.status != 200) { router.replace("/auth"); }
 
     } else { router.replace("/auth"); }
@@ -83,11 +84,9 @@ const Admin = () => {
 
           }
 
-
         </Wrapper>
 
       </Container>
-
 
     </>
 
