@@ -35,6 +35,7 @@ const TransactionDataDialog = ({ ...pr }: Props) => {
                 <DialogTitle id="scroll-dialog-title">Данные транзакции</DialogTitle>
 
                 <DialogContent dividers={false}>
+
                     <DialogContentText ref={descriptionElementRef} tabIndex={-1} sx={{ marginTop: '20px', marginBottom: '20px' }}>
 
                         <Box sx={sx_tr}>
@@ -55,6 +56,7 @@ const TransactionDataDialog = ({ ...pr }: Props) => {
                         <BoxDataTransactions type="Пароль" data={pr.transactions?.password || 'не назначено.'} />
 
                     </DialogContentText>
+                    
                 </DialogContent>
 
                 <DialogActions>

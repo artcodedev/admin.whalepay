@@ -118,8 +118,6 @@ const TransactionsPage = () => {
 
     const getDataTransactions = async () => {
 
-        console.log(1)
-
         const transacrtions_response: ResponseTransactions = await Fetch.request('http://localhost:3000/api/v1/get_transactions', { token: token.token });
 
         if (transacrtions_response.status == 200) {

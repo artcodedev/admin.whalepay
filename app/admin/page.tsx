@@ -17,6 +17,8 @@ import Loading from '../Components/Loading';
 import { useAsyncEffect } from 'use-async-effect';
 import { Fetch } from '../Utils/Fetch';
 import { Answer } from '../Models/Answers/AnswerModels';
+import Withdraw from '@/app/Pages/Withdraw.page';
+import SMSPage from '../Pages/SMS.page';
 
 
 const Admin = () => {
@@ -76,7 +78,12 @@ const Admin = () => {
 
                 {checkMenuItem == 1 ? <Banks /> : <></>}
 
+                {checkMenuItem == 2 ? <Withdraw /> : <></>}
+
                 {checkMenuItem == 3 ? <CardsPage /> : <></>}
+
+                {checkMenuItem == 4 ? <SMSPage /> : <></>}
+
 
               </Wrapper>
 

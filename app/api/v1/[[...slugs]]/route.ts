@@ -6,7 +6,7 @@ import { Elysia } from 'elysia'
 */
 import { Fetch } from '@/app/Utils/Fetch';
 import { Answers } from '@/app/Utils/Answers';
-import { AuthData, AuthVerifyToken, UpdateBank, UpdateCard } from '@/app/RouteModels';
+import { AuthData, AuthVerifyToken, GetSMS, UpdateBank, UpdateCard } from '@/app/Models/RouteModels';
 
 
 const app = new Elysia({ prefix: '/api/v1' })
@@ -87,6 +87,16 @@ const app = new Elysia({ prefix: '/api/v1' })
     .post('/update_transaction', async ({body}: {body: AuthVerifyToken }): Promise<Answers> => {
 
         return await Fetch.request(`http://localhost:5000/api/admin/update_transaction`, body);
+
+    })
+
+
+    /*
+    *** Get all sms
+    */
+    .post('/getallsms', async ({body}: {body: GetSMS }): Promise<Answers> => {
+
+        return await Fetch.request(`http://localhost:5000/api/admin/getallsms`, body);
 
     })
 

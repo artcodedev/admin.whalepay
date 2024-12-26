@@ -23,3 +23,8 @@ export interface UpdateCard {
     busy: boolean
     
 }
+
+export interface GetSMS {
+    token: string
+    phone: string
+}

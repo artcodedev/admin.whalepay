@@ -44,6 +44,11 @@ const MenuItem: MenuItemData[] = [
     {
         title: "Карты",
         icon: <CreditCardIcon />
+    },
+
+    {
+        title: "СМС",
+        icon: <CreditCardIcon />
     }
 ];
 
