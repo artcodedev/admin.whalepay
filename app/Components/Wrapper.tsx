@@ -8,7 +8,7 @@ const Wrapper = ({ children }: Readonly<{ children?: React.ReactNode; }>) => {
             <div style={{position:'relative', width: '100%', height: '100%'}}>{children}</div>
         </>
     );
+    
 }
-
 
 export default Wrapper;

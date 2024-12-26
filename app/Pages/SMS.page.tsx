@@ -65,9 +65,8 @@ const SMSPage = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [messageError, setMessageError] = useState<boolean>(false);
     const [data, setData] = useState<DataNumber[]>([]);
-    const [phonesData, setPhonesData] = useState<NumberPhoneData[]>([]) 
+    const [phonesData, setPhonesData] = useState<NumberPhoneData[]>([])
     const [openError, setOpenError] = useState<boolean>(false);
-
     const [numberVal, setNumberVal] = useState<string>('');
 
     const handleCloseError = (e: boolean) => (): void => { setOpenError(e); };
@@ -76,11 +75,12 @@ const SMSPage = () => {
 
         const smsData: FetchDataSms = await Fetch.request('http://localhost:3000/api/v1/getallsms', { token: token.token, phone: phone });
 
+        setLoading(false)
+
         if (smsData.status == 200) {
             setData(smsData.data.reverse())
-            setLoading(false)
+            setMessageError(false)
         } else {
-            setLoading(false)
             setMessageError(true)
             setOpenError(true)
         }
@@ -97,7 +97,7 @@ const SMSPage = () => {
 
     useAsyncEffect(async () => {
 
-        const phoneData: NumberPhone  = await Fetch.request('http://localhost:3000/api/v1/getallphones', { token: token.token});
+        const phoneData: NumberPhone = await Fetch.request('http://localhost:3000/api/v1/getallphones', { token: token.token });
 
         if (phoneData.status == 200) {
 
@@ -113,7 +113,7 @@ const SMSPage = () => {
         <>
 
             <SnackbarAlert open={openError} duration={4000} handleClose={handleCloseError} message="Ошибка получение данных!" />
-            
+
             <Container sx={{ minWidth: { lg: '100%' } }}>
 
                 <Wrapper>
@@ -126,7 +126,7 @@ const SMSPage = () => {
 
                         <Wrapper>
 
-                            {loading ? <Loading /> : messageError ? <Box sx={{color: '#000'}}>Не удалось получить смс по этому номеру!</Box> :
+                            {loading ? <Loading /> : 
 
                                 <Box>
 
@@ -137,6 +137,8 @@ const SMSPage = () => {
 
                                             <Select value={numberVal} label="Номер телефона" onChange={onChangeNumber} >
 
+                                                <MenuItem value={'+79020542692'}>+79020542692</MenuItem>
+
                                                 {phonesData.map((e) => <MenuItem value={e.phone}>{e.phone}</MenuItem>)}
 
                                             </Select>
@@ -145,7 +147,7 @@ const SMSPage = () => {
 
                                     <Box>
 
-                                        {data.length ? <Box sx={{ minWidth: { lg: '100%' }, marginTop: '30px', marginBottom: '30px', border: '1px solid #eee' }}>
+                                        { messageError ? <Box sx={{ color: '#000', margin: '30px 0px' }}>Не удалось получить смс по этому номеру!</Box> : data.length ? <Box sx={{ minWidth: { lg: '100%' }, marginTop: '30px', marginBottom: '30px', border: '1px solid #eee' }}>
 
                                             <TableContainer sx={{ maxHeight: 740 }}>
                                                 <Table stickyHeader aria-label="sticky table">
@@ -155,7 +157,6 @@ const SMSPage = () => {
                                                             {columns.map((column, i) => (
                                                                 <TableCell
                                                                     key={''}
-
                                                                     sx={{ textAlign: 'left' }}
                                                                     style={{ minWidth: column.minWidth, textAlign: 'left', fontWeight: 'bold' }}
                                                                 >

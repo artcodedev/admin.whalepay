@@ -15,7 +15,6 @@ const BoxDataTransactions = ({ ...pr }: BoxData) => {
 
     const [snackbar, setSnackbar] = useState<boolean>(false);
     const [typeSnackbar, setTypeSnackbar] = useState<string>('');
-    // const [ _, setMessageInfo] = useState<SnackbarMessage | undefined>(undefined);
 
     const handleClose = () => { setSnackbar(false); }
 
@@ -25,14 +24,11 @@ const BoxDataTransactions = ({ ...pr }: BoxData) => {
         navigator.clipboard.writeText(data)
     }
 
-    // const handleExited = () => { setMessageInfo(undefined); };
-
     return (
         <>
             <Snackbar
                 open={snackbar}
                 autoHideDuration={500}
-                // TransitionProps={{ onExited: handleExited }}
                 onClose={handleClose}
                 message={`${typeSnackbar} скопирован!`}
             />
