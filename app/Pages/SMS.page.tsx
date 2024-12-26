@@ -20,26 +20,8 @@ import { useCookies } from 'react-cookie';
 import SnackbarAlert from "../Components/SnackbarAlert";
 import { Fetch } from "../Utils/Fetch";
 import useAsyncEffect from "use-async-effect";
+import { DataNumber, FetchDataSms, NumberPhone, NumberPhoneData } from "./SMSPageModels";
 
-interface DataNumber {
-    phone: string
-    date: string
-    message: string
-}
-
-interface FetchDataSms {
-    status: number
-    data: DataNumber[]
-}
-
-interface NumberPhoneData {
-    phone: string
-}
-
-interface NumberPhone {
-    status: number
-    data: NumberPhoneData[]
-}
 
 const columns: readonly Column[] = [
     {
@@ -88,8 +70,9 @@ const SMSPage = () => {
 
     const onChangeNumber = (event: SelectChangeEvent) => {
 
-        setLoading(true);
         const phone: string = event.target.value;
+
+        setLoading(true);
         fetchDataSms(phone);
         setNumberVal(phone);
 
@@ -126,7 +109,7 @@ const SMSPage = () => {
 
                         <Wrapper>
 
-                            {loading ? <Loading /> : 
+                            {loading ? <Loading /> :
 
                                 <Box>
 
@@ -147,44 +130,48 @@ const SMSPage = () => {
 
                                     <Box>
 
-                                        { messageError ? <Box sx={{ color: '#000', margin: '30px 0px' }}>Не удалось получить смс по этому номеру!</Box> : data.length ? <Box sx={{ minWidth: { lg: '100%' }, marginTop: '30px', marginBottom: '30px', border: '1px solid #eee' }}>
+                                        {messageError ?
+                                            <Box sx={{ color: '#000', margin: '30px 0px' }}>Не удалось получить смс по этому номеру!</Box> : data.length ?
 
-                                            <TableContainer sx={{ maxHeight: 740 }}>
-                                                <Table stickyHeader aria-label="sticky table">
+                                                <Box sx={{ minWidth: { lg: '100%' }, marginTop: '30px', marginBottom: '30px', border: '1px solid #eee' }}>
 
-                                                    <TableHead>
-                                                        <TableRow key={''}>
-                                                            {columns.map((column, i) => (
-                                                                <TableCell
-                                                                    key={''}
-                                                                    sx={{ textAlign: 'left' }}
-                                                                    style={{ minWidth: column.minWidth, textAlign: 'left', fontWeight: 'bold' }}
-                                                                >
-                                                                    {column.label}
-                                                                </TableCell>
-                                                            ))}
-                                                        </TableRow>
-                                                    </TableHead>
+                                                    <TableContainer sx={{ maxHeight: 740 }}>
+                                                        <Table stickyHeader aria-label="sticky table">
 
-                                                    <TableBody>
+                                                            <TableHead>
+                                                                <TableRow key={''}>
+                                                                    {columns.map((column, i) => (
+                                                                        <TableCell
+                                                                            key={''}
+                                                                            sx={{ textAlign: 'left' }}
+                                                                            style={{ minWidth: column.minWidth, textAlign: 'left', fontWeight: 'bold' }}
+                                                                        >
+                                                                            {column.label}
+                                                                        </TableCell>
+                                                                    ))}
+                                                                </TableRow>
+                                                            </TableHead>
 
-                                                        {data.map((e) =>
+                                                            <TableBody>
 
-                                                            <TableRow hover role="checkbox" tabIndex={-1} key={''}>
+                                                                {data.map((e) =>
 
-                                                                <TableCell key={''} sx={{ textAlign: 'left' }}>{e.phone}</TableCell>
+                                                                    <TableRow hover role="checkbox" tabIndex={-1} key={''}>
 
-                                                                <TableCell key={''} sx={{ textAlign: 'left', }}>{e.date}</TableCell>
+                                                                        <TableCell key={''} sx={{ textAlign: 'left' }}>{e.phone}</TableCell>
 
-                                                                <TableCell key={''} sx={{ textAlign: 'left', }}>{e.message}</TableCell>
+                                                                        <TableCell key={''} sx={{ textAlign: 'left', }}>{e.date}</TableCell>
 
-                                                            </TableRow>)}
+                                                                        <TableCell key={''} sx={{ textAlign: 'left', }}>{e.message}</TableCell>
 
-                                                    </TableBody>
+                                                                    </TableRow>)}
 
-                                                </Table>
-                                            </TableContainer>
-                                        </Box> : <Box sx={{ marginTop: '30px', color: '#000' }}>Выберите номер </ Box>}
+                                                            </TableBody>
+
+                                                        </Table>
+                                                    </TableContainer>
+                                                </Box>
+                                                : <Box sx={{ marginTop: '30px', color: '#000' }}>Выберите номер </ Box>}
 
                                     </Box>
 
