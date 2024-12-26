@@ -100,6 +100,15 @@ const app = new Elysia({ prefix: '/api/v1' })
 
     })
 
+    /*
+    *** Get all phone numbers
+    */
+    .post('/getallphones', async ({body}: {body: GetSMS }): Promise<Answers> => {
+
+        return await Fetch.request(`http://localhost:5000/api/admin/getallphones`, body);
+
+    })
+
     
 
 export const GET = app.handle

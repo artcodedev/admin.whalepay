@@ -19,6 +19,7 @@ import TableBody from "@mui/material/TableBody";
 import { useCookies } from 'react-cookie';
 import SnackbarAlert from "../Components/SnackbarAlert";
 import { Fetch } from "../Utils/Fetch";
+import useAsyncEffect from "use-async-effect";
 
 interface DataNumber {
     phone: string
@@ -29,6 +30,15 @@ interface DataNumber {
 interface FetchDataSms {
     status: number
     data: DataNumber[]
+}
+
+interface NumberPhoneData {
+    phone: string
+}
+
+interface NumberPhone {
+    status: number
+    data: NumberPhoneData[]
 }
 
 const columns: readonly Column[] = [
@@ -52,8 +62,10 @@ const columns: readonly Column[] = [
 const SMSPage = () => {
 
     const [token,] = useCookies(['token']);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [messageError, setMessageError] = useState<boolean>(false);
     const [data, setData] = useState<DataNumber[]>([]);
+    const [phonesData, setPhonesData] = useState<NumberPhoneData[]>([]) 
     const [openError, setOpenError] = useState<boolean>(false);
 
     const [numberVal, setNumberVal] = useState<string>('');
@@ -68,18 +80,34 @@ const SMSPage = () => {
             setData(smsData.data.reverse())
             setLoading(false)
         } else {
+            setLoading(false)
+            setMessageError(true)
             setOpenError(true)
         }
     }
 
     const onChangeNumber = (event: SelectChangeEvent) => {
 
-        setLoading(true)
-        const phone: string = event.target.value
-        fetchDataSms(phone)
+        setLoading(true);
+        const phone: string = event.target.value;
+        fetchDataSms(phone);
         setNumberVal(phone);
 
     };
+
+    useAsyncEffect(async () => {
+
+        const phoneData: NumberPhone  = await Fetch.request('http://localhost:3000/api/v1/getallphones', { token: token.token});
+
+        if (phoneData.status == 200) {
+
+            setPhonesData(phoneData.data);
+            setLoading(false);
+        }
+        else {
+            setOpenError(true)
+        }
+    }, []);
 
     return (
         <>
@@ -91,13 +119,14 @@ const SMSPage = () => {
                 <Wrapper>
 
                     <Box sx={{ maxWidth: '1400px', margin: 'auto' }}>
+
                         <Typography variant="h5" noWrap component="div" sx={style.main_title}>
                             СМС
                         </Typography>
 
                         <Wrapper>
 
-                            {loading ? <Loading /> :
+                            {loading ? <Loading /> : messageError ? <Box sx={{color: '#000'}}>Не удалось получить смс по этому номеру!</Box> :
 
                                 <Box>
 
@@ -108,7 +137,7 @@ const SMSPage = () => {
 
                                             <Select value={numberVal} label="Номер телефона" onChange={onChangeNumber} >
 
-                                                <MenuItem value={'+79020542692'}>+79020542692</MenuItem>
+                                                {phonesData.map((e) => <MenuItem value={e.phone}>{e.phone}</MenuItem>)}
 
                                             </Select>
                                         </FormControl>
