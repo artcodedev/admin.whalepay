@@ -7,26 +7,81 @@ import { useState } from "react";
 import * as style from '@/app/Styles/styles';
 import ToggleButton from "@mui/material/ToggleButton";
 import AddIcon from '@mui/icons-material/Add';
+import { Column } from "../Models/BanksPageModel";
+import TableContainer from "@mui/material/TableContainer";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import TableBody from "@mui/material/TableBody";
+import Chip from "@mui/material/Chip";
+import WithdrawDialog from "../Components/WithdrawDialog";
 
 
+const columns: readonly Column[] = [
+    {
+        label: 'Статус',
+        minWidth: 30
+    },
+
+    {
+        label: 'Карта',
+        minWidth: 30
+    },
+
+    {
+        label: 'Сумма',
+        minWidth: 30,
+    }
+
+];
+
+enum WithdrawStatus {
+    PENDING,
+    SUCCESS,
+    FAILED
+}
+
+
+interface DataWithdraw {
+    status: WithdrawStatus
+    card: string
+    amount: number
+}
 
 const Withdraw = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
+    const [dataWithdraw, setDataWithdraw] = useState<DataWithdraw[]>([]);
+
+    const [openDataWithdrawDialog, setOpenDataWithdrawDialog] = useState<boolean>(false);
+
+    const closeDataWithdrawDialog = () => {
+        setOpenDataWithdrawDialog(false)
+    }
 
     const openMenu = () => {
         console.log("open menu")
+
+        setOpenDataWithdrawDialog(true);
+
+        // setDataWithdraw([
+        //     { status: WithdrawStatus['FAILED'], card: '0000000000000000', amount: 10 }
+        // ])
     }
 
     return (
         <>
+
+            <WithdrawDialog onClose={closeDataWithdrawDialog} open={openDataWithdrawDialog} />
+
             <Container sx={{ minWidth: { lg: '100%' } }}>
 
                 <Wrapper>
 
                     <Box sx={{ maxWidth: '1400px', margin: 'auto' }}>
                         <Typography variant="h5" noWrap component="div" sx={style.main_title}>
-                            Все банки
+                            Вывод средств
                         </Typography>
 
                         <Wrapper>
@@ -40,7 +95,60 @@ const Withdraw = () => {
                                 <Box>menu</Box>
 
 
-                                <Box>table</Box>
+                                <Box>
+                                    <Box sx={{ minWidth: { lg: '100%' }, marginTop: '30px', marginBottom: '30px', border: '1px solid #eee' }}>
+
+                                        <TableContainer sx={{ maxHeight: 740 }}>
+                                            <Table stickyHeader aria-label="sticky table">
+
+                                                <TableHead>
+                                                    <TableRow key={''}>
+                                                        {columns.map((column, i) => (
+                                                            <TableCell
+                                                                key={''}
+                                                                sx={{ textAlign: 'left' }}
+                                                                style={{ minWidth: column.minWidth, textAlign: 'left', fontWeight: 'bold' }}
+                                                            >
+                                                                {column.label}
+                                                            </TableCell>
+                                                        ))}
+                                                    </TableRow>
+                                                </TableHead>
+
+                                                <TableBody>
+
+                                                    {dataWithdraw.map((e) =>
+
+                                                        <TableRow hover role="checkbox" tabIndex={-1} key={''}>
+
+                                                            <TableCell key={''} sx={{ textAlign: 'left' }}>
+                                                                <Chip
+
+                                                                    clickable
+                                                                    label={WithdrawStatus[e.status]}
+
+                                                                    color={
+
+                                                                        WithdrawStatus[e.status] === 'SUCCESS' ? 'success' :
+                                                                            WithdrawStatus[e.status] === 'PENDING' ? 'warning' : 'error'
+                                                                    }
+
+                                                                />
+                                                            </TableCell>
+
+                                                            <TableCell key={''} sx={{ textAlign: 'left', }}>{e.card}</TableCell>
+
+                                                            <TableCell key={''} sx={{ textAlign: 'left', }}>{e.amount}</TableCell>
+
+                                                        </TableRow>
+                                                    )}
+
+                                                </TableBody>
+
+                                            </Table>
+                                        </TableContainer>
+                                    </Box>
+                                </Box>
                             </Box>}
 
                         </Wrapper>

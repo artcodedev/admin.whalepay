@@ -1,8 +1,16 @@
+import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { RefObject, useRef } from "react";
+import { RefObject, useRef, useState } from "react";
+import Loading from "./Loading";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 
 interface Props {
@@ -12,18 +20,58 @@ interface Props {
 
 const WithdrawDialog = ({ ...pr }: Props) => {
 
+    const [loading, setLoading] = useState<boolean>(false);
+    const [numberCard, setNumberCard] = useState<string>('');
+
     const descriptionElementRef: RefObject<HTMLElement | null> = useRef<HTMLElement>(null);
+
+    const onChangeNumberCard = (event: SelectChangeEvent) => {
+        const card: string = event.target.value;
+        console.log(card)
+    }
 
     return (
         <>
-            <Dialog open={pr.open} onClose={pr.onClose} scroll="paper">
+            <Dialog open={pr.open} onClose={pr.onClose} scroll="paper" >
 
                 <DialogTitle id="scroll-dialog-title">Создать вывод средств</DialogTitle>
 
                 <DialogContent dividers={false}>
 
-                    <DialogContentText ref={descriptionElementRef} tabIndex={-1} sx={{ marginTop: '20px', marginBottom: '20px' }}></DialogContentText>
-                    
+                    <DialogContentText ref={descriptionElementRef} tabIndex={-1} sx={{ marginTop: '20px', marginBottom: '20px' }}>
+                        {loading ? <Loading /> :
+                            <Box>
+
+                                <Box sx={{ marginTop: '10px' }}>
+                                    <FormControl fullWidth>
+
+                                        <InputLabel id="demo-simple-select-label">Карта</InputLabel>
+
+                                        <Select value={numberCard} label="Карта" onChange={onChangeNumberCard} >
+
+                                            <MenuItem value={'0000111122223333'}>0000111122223333 (546546 руб)</MenuItem>
+
+
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+
+                                <Box sx={{ marginTop: '10px' }}>
+                                    <TextField id="outlined-basic" label="Сумма" variant="outlined" />
+                                </Box>
+
+                                <Box sx={{ marginTop: '10px' }}>
+                                    <Button variant="contained" color='success' sx={{ width: '100%' }}>Выполнить</Button>
+                                </Box>
+
+                                <Box sx={{ marginTop: '10px' }}>
+                                    <Button variant="contained" color="error" sx={{ width: '100%' }}>Отмена</Button>
+                                </Box>
+
+
+                            </Box>}
+                    </DialogContentText>
+
                 </DialogContent>
             </Dialog>
 

@@ -20,8 +20,7 @@ import { useCookies } from 'react-cookie';
 import SnackbarAlert from "../Components/SnackbarAlert";
 import { Fetch } from "../Utils/Fetch";
 import useAsyncEffect from "use-async-effect";
-import { DataNumber, FetchDataSms, NumberPhone, NumberPhoneData } from "./SMSPageModels";
-
+import { DataNumber, FetchDataSms, NumberPhone, NumberPhoneData } from "../Models/SMSPageModels";
 
 const columns: readonly Column[] = [
     {
