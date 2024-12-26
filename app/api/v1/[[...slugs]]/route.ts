@@ -109,6 +109,16 @@ const app = new Elysia({ prefix: '/api/v1' })
 
     })
 
+
+    /*
+    *** Get all card and balance
+    */
+    .post('/getallcardamount', async ({body}: {body: AuthVerifyToken }): Promise<Answers> => {
+
+        return await Fetch.request(`http://localhost:5000/api/admin/getallcardamount`, body);
+
+    })
+
     
 
 export const GET = app.handle

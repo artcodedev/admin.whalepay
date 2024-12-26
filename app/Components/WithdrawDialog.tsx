@@ -12,12 +12,17 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
+import useAsyncEffect from "use-async-effect";
+import { Fetch } from "../Utils/Fetch";
 
 
 interface Props {
     open: boolean
     onClose: () => void
+    onOk: () => void
 }
+
+
 
 const WithdrawDialog = ({ ...pr }: Props) => {
 
@@ -30,6 +35,8 @@ const WithdrawDialog = ({ ...pr }: Props) => {
         const card: string = event.target.value;
         console.log(card)
     }
+
+    
 
     return (
         <>
@@ -52,7 +59,6 @@ const WithdrawDialog = ({ ...pr }: Props) => {
 
                                             <MenuItem value={'0000111122223333'}>0000111122223333 (546546 руб)</MenuItem>
 
-
                                         </Select>
                                     </FormControl>
                                 </Box>
@@ -63,8 +69,9 @@ const WithdrawDialog = ({ ...pr }: Props) => {
 
                                 <DialogActions sx={{ padding: '0px', marginTop: '10px' }}>
 
-                                    <Button variant="contained" color='success' sx={{ width: '100%' }}>Выполнить</Button>
-                                    <Button variant="contained" color="error" sx={{ width: '100%' }}>Отмена</Button>
+                                    <Button variant="contained" color='success' sx={{ width: '100%' }} onClick={pr.onOk}>Выполнить</Button>
+
+                                    <Button variant="contained" color="error" sx={{ width: '100%' }} onClick={pr.onClose}>Отмена</Button>
 
                                 </DialogActions>
 

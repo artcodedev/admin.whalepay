@@ -16,6 +16,9 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import Chip from "@mui/material/Chip";
 import WithdrawDialog from "../Components/WithdrawDialog";
+import { Fetch } from "../Utils/Fetch";
+import { useCookies } from "react-cookie";
+import SnackbarAlert from "../Components/SnackbarAlert";
 
 
 const columns: readonly Column[] = [
@@ -49,21 +52,62 @@ interface DataWithdraw {
     amount: number
 }
 
+interface CardData {
+    card: string
+    amonut: number
+}
+interface CardDataFetch {
+    status: number
+    data: CardData[]
+}
+
 const Withdraw = () => {
 
+    const [token,] = useCookies(['token']);
     const [loading, setLoading] = useState<boolean>(false);
     const [dataWithdraw, setDataWithdraw] = useState<DataWithdraw[]>([]);
 
+    const [messageError, setMessageError] = useState<string>('')
+    const [openError, setOpenError] = useState<boolean>(false);
+
     const [openDataWithdrawDialog, setOpenDataWithdrawDialog] = useState<boolean>(false);
+
+    const handleClose = (e: boolean) => (): void => { setOpenError(e); };
 
     const closeDataWithdrawDialog = () => {
         setOpenDataWithdrawDialog(false)
     }
 
+    const onOkWithdraw = () => {
+
+        setOpenDataWithdrawDialog(false)
+        setLoading(true);
+
+    }
+
+    const getDataCard = async () => {
+        const cardData: CardDataFetch = await Fetch.request('http://localhost:3000/api/v1/getallcardamount', { token: token });
+
+        console.log(cardData)
+
+        if (cardData.status == 200) {
+
+        }
+
+        else {
+            setLoading(false)
+            setMessageError("Ошибка получение данных!")
+        }
+
+
+    }
+
     const openMenu = () => {
         console.log("open menu")
 
-        setOpenDataWithdrawDialog(true);
+        setLoading(true);
+
+        getDataCard()
 
         // setDataWithdraw([
         //     { status: WithdrawStatus['FAILED'], card: '0000000000000000', amount: 10 }
@@ -73,7 +117,9 @@ const Withdraw = () => {
     return (
         <>
 
-            <WithdrawDialog onClose={closeDataWithdrawDialog} open={openDataWithdrawDialog} />
+            <SnackbarAlert open={openError} duration={4000} handleClose={handleClose} message={messageError} />
+
+            <WithdrawDialog onClose={closeDataWithdrawDialog} onOk={onOkWithdraw} open={openDataWithdrawDialog} />
 
             <Container sx={{ minWidth: { lg: '100%' } }}>
 
