@@ -3,7 +3,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { RefObject, useRef, useState } from "react";
+import { ChangeEvent, RefObject, useRef, useState } from "react";
 import Loading from "./Loading";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -14,12 +14,21 @@ import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
 import useAsyncEffect from "use-async-effect";
 import { Fetch } from "../Utils/Fetch";
+import { NumericFormat } from 'react-number-format';
 
+interface CardData {
+    card_number: string
+    balance: number
+}
 
 interface Props {
     open: boolean
+    cards: CardData[]
+    changeCardNumber: string
     onClose: () => void
     onOk: () => void
+    onChangeNumberCard: (e: SelectChangeEvent) => void
+    onChangeAmount: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 
@@ -27,16 +36,9 @@ interface Props {
 const WithdrawDialog = ({ ...pr }: Props) => {
 
     const [loading, setLoading] = useState<boolean>(false);
-    const [numberCard, setNumberCard] = useState<string>('');
+    // const [numberCard, setNumberCard] = useState<string>('');
 
     const descriptionElementRef: RefObject<HTMLElement | null> = useRef<HTMLElement>(null);
-
-    const onChangeNumberCard = (event: SelectChangeEvent) => {
-        const card: string = event.target.value;
-        console.log(card)
-    }
-
-    
 
     return (
         <>
@@ -55,16 +57,25 @@ const WithdrawDialog = ({ ...pr }: Props) => {
 
                                         <InputLabel id="demo-simple-select-label">Карта</InputLabel>
 
-                                        <Select value={numberCard} label="Карта" onChange={onChangeNumberCard} >
+                                        <Select value={pr.changeCardNumber} label="Карта" onChange={pr.onChangeNumberCard} >
 
-                                            <MenuItem value={'0000111122223333'}>0000111122223333 (546546 руб)</MenuItem>
+                                            {pr.cards.map((e) => <MenuItem value={e.card_number}>{e.card_number} ({e.balance} руб)</MenuItem>)}
 
                                         </Select>
                                     </FormControl>
                                 </Box>
 
                                 <Box sx={{ marginTop: '10px' }}>
-                                    <TextField id="outlined-basic" label="Сумма" variant="outlined" sx={{ width: '100%' }} />
+
+                                    <NumericFormat
+                                        value={0}
+                                        onChange={pr.onChangeAmount}
+                                        customInput={TextField}
+                                        valueIsNumericString
+                                        sx={{width: '100%'}}
+                                        variant='outlined'
+                                    />
+
                                 </Box>
 
                                 <DialogActions sx={{ padding: '0px', marginTop: '10px' }}>

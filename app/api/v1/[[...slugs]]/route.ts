@@ -70,7 +70,6 @@ const app = new Elysia({ prefix: '/api/v1' })
 
     })
 
-
     /*
     *** Get all transactions
     */
@@ -80,7 +79,6 @@ const app = new Elysia({ prefix: '/api/v1' })
 
     })
 
-
     /*
     *** Update transaction
     */
@@ -89,7 +87,6 @@ const app = new Elysia({ prefix: '/api/v1' })
         return await Fetch.request(`http://localhost:5000/api/admin/update_transaction`, body);
 
     })
-
 
     /*
     *** Get all sms
@@ -116,6 +113,24 @@ const app = new Elysia({ prefix: '/api/v1' })
     .post('/getallcardamount', async ({body}: {body: AuthVerifyToken }): Promise<Answers> => {
 
         return await Fetch.request(`http://localhost:5000/api/admin/getallcardamount`, body);
+
+    })
+
+    /*
+    *** Get all withdraw
+    */
+    .post('/getallwithdraw', async ({body}: {body: AuthVerifyToken }): Promise<Answers> => {
+
+        return await Fetch.request(`http://localhost:5000/api/admin/getallwithdraw`, body);
+
+    })
+
+    /*
+    *** Create withdraw
+    */
+    .post('/createwithdraw', async ({body}: {body: AuthVerifyToken }): Promise<Answers> => {
+
+        return await Fetch.request(`http://localhost:5000/api/admin/createwithdraw`, body);
 
     })
 
