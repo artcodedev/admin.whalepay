@@ -12,8 +12,6 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
-import useAsyncEffect from "use-async-effect";
-import { Fetch } from "../Utils/Fetch";
 import { NumericFormat } from 'react-number-format';
 
 interface CardData {
@@ -29,6 +27,7 @@ interface Props {
     onOk: () => void
     onChangeNumberCard: (e: SelectChangeEvent) => void
     onChangeAmount: (e: ChangeEvent<HTMLInputElement>) => void
+    onChangeAmountWithdraw: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 
@@ -68,12 +67,27 @@ const WithdrawDialog = ({ ...pr }: Props) => {
                                 <Box sx={{ marginTop: '10px' }}>
 
                                     <NumericFormat
-                                        value={0}
+                                        // value={0}
                                         onChange={pr.onChangeAmount}
                                         customInput={TextField}
                                         valueIsNumericString
                                         sx={{width: '100%'}}
                                         variant='outlined'
+                                        placeholder="Сумма"
+                                    />
+
+                                </Box>
+
+                                <Box sx={{ marginTop: '10px' }}>
+
+                                    <NumericFormat
+                                        // value={0}
+                                        onChange={pr.onChangeAmountWithdraw}
+                                        customInput={TextField}
+                                        valueIsNumericString
+                                        sx={{width: '100%'}}
+                                        variant='outlined'
+                                        placeholder="Номер карты"
                                     />
 
                                 </Box>

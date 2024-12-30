@@ -34,6 +34,11 @@ const columns: readonly Column[] = [
     },
 
     {
+        label: 'Карта получателя',
+        minWidth: 30
+    },
+
+    {
         label: 'Сумма',
         minWidth: 30,
     },
@@ -53,6 +58,7 @@ enum WithdrawStatus {
 
 interface DataWithdraw {
     withdraw_card_number: string
+    card_number: string
     amount: number
     status: WithdrawStatus
     created_at: number
@@ -75,6 +81,7 @@ interface GetAllWithDraw {
 interface createWithDraw {
     token: string
     card_number: string
+    card_number_withdraw: string
     amount: number
 }
 
@@ -87,6 +94,7 @@ const Withdraw = () => {
     const [message, setMessage] = useState<boolean>(true);
 
     const [changeCardNumber, setChangeCardNumber] = useState<string>('');
+    const [changeCardNumberWithdraw, setChangeCardNumberWithdraw] = useState<string>('')
 
     const [cards, setCards] = useState<CardData[]>([]);
 
@@ -107,8 +115,10 @@ const Withdraw = () => {
         const data: createWithDraw = {
             token: token.token,
             card_number: changeCardNumber,
+            card_number_withdraw: changeCardNumberWithdraw,
             amount: amount
         }
+
         const withdraw: {status: number} = await Fetch.request('http://localhost:3000/api/v1/createwithdraw', data);
 
         if (withdraw.status == 200) {getAllWithDraw();}
@@ -153,6 +163,11 @@ const Withdraw = () => {
     const onChangeNumberCard = (event: SelectChangeEvent) => {
         const card: string = event.target.value;
         setChangeCardNumber(card);
+    }
+
+    const onChangeAmountWithdraw = (event: SelectChangeEvent) => {
+        const card: string = event.target.value;
+        setChangeCardNumberWithdraw(card);
     }
 
     const getDataCard = async () => {
@@ -203,6 +218,7 @@ const Withdraw = () => {
     }
 
     useEffect(() => {
+
         getAllWithDraw();
 
         let timer_id = setInterval(() => {
@@ -212,6 +228,7 @@ const Withdraw = () => {
         }, 3000);
 
         return () => clearInterval(timer_id);
+
     }, []);
 
     return (
@@ -220,6 +237,7 @@ const Withdraw = () => {
             <SnackbarAlert open={openError} duration={4000} handleClose={handleClose} message={messageError} />
 
             <WithdrawDialog
+                onChangeAmountWithdraw={onChangeAmountWithdraw }
                 onClose={closeDataWithdrawDialog}
                 onOk={onOkWithdraw}
                 open={openDataWithdrawDialog}
@@ -287,6 +305,8 @@ const Withdraw = () => {
 
                                                                 />
                                                             </TableCell>
+
+                                                            <TableCell key={''} sx={{ textAlign: 'left', }}>{e.card_number}</TableCell>
 
                                                             <TableCell key={''} sx={{ textAlign: 'left', }}>{e.withdraw_card_number}</TableCell>
 
